@@ -10,4 +10,11 @@ import lombok.Setter;
 public class McpInfo {
     private String id;
     private boolean active;
+
+    @Getter
+    @Setter
+    public static class McpUpdateDto {
+        private String id;
+        private boolean active;
+    }
 }

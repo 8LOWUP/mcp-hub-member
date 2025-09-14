@@ -4,7 +4,7 @@ import com.mcphub.domain.workspace.dto.request.WorkspaceCreateRequest;
 import com.mcphub.domain.workspace.dto.request.WorkspaceMcpUpdateRequest;
 import com.mcphub.domain.workspace.dto.request.WorkspaceUpdateRequest;
 import com.mcphub.domain.workspace.entity.Workspace;
-import com.mcphub.domain.workspace.repository.jpa.WorkspaceJpaRepository;
+import com.mcphub.domain.workspace.repository.mongo.WorkspaceMongoRepository;
 import com.mcphub.domain.workspace.status.WorkspaceErrorStatus;
 import com.mcphub.global.common.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @Service
@@ -21,12 +20,12 @@ public class WorkspaceServiceImpl implements WorkspaceService {
 
     public static final int MCP_TOLERANCE_NUMBER = 3; // 워크스페이스 당 허용된 MCP 개수
 
-    private final WorkspaceJpaRepository workspaceJpaRepository;
+    private final WorkspaceMongoRepository workspaceMongoRepository;
 
     @Override
     @Transactional(readOnly = true)
     public Workspace findRecentWorkspaceByUserId(String userId) {
-        return workspaceJpaRepository.findTopByUserIdAndDeletedAtOrderByCreatedAtDesc(userId, null).orElse(null);
+        return workspaceMongoRepository.findTopByUserIdAndDeletedAtOrderByCreatedAtDesc(userId, null).orElse(null);
     }
 
     @Override
@@ -44,7 +43,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         // MCP 개수가 허용치를 초과할 경우 Exception
         if (request.mcps().size() > MCP_TOLERANCE_NUMBER) throw new RestApiException(WorkspaceErrorStatus.MCP_NUMBER_TOLERANCE_EXCEEDED);
 
-        return workspaceJpaRepository.save(Workspace.builder()
+        return workspaceMongoRepository.save(Workspace.builder()
                 .id(_id)
                 .llmId(request.llmId())
                 .userId(userId)
@@ -64,7 +63,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
                 || workspaceName.isEmpty())
             throw new RestApiException(WorkspaceErrorStatus.WORKSPACE_PARAMETER_ERROR);
 
-        return workspaceJpaRepository.save(Workspace.builder()
+        return workspaceMongoRepository.save(Workspace.builder()
                 .id(_id)
                 .llmId(recentWorkspace.getLlmId())
                 .userId(userId)
@@ -77,7 +76,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     public List<Workspace> getWorkspaceHistory(String userId) {
 
         if (userId.isEmpty()) throw new RestApiException(WorkspaceErrorStatus.USER_ID_NOT_FOUND_IN_TOKEN);
-        return workspaceJpaRepository.findByUserIdAndDeletedAtOrderByCreatedAtDesc(userId, null);
+        return workspaceMongoRepository.findByUserIdAndDeletedAtOrderByCreatedAtDesc(userId, null);
     }
 
     @Override
@@ -85,7 +84,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     public Workspace getWorkspaceDetail(Long workspaceId, Long userId) {
 
         // 워크스페이스를 조회한다. 없으면 Exception
-        Workspace workspace = workspaceJpaRepository.findById(workspaceId.toString()).orElseThrow(() -> new RestApiException(WorkspaceErrorStatus.WORKSPACE_NOT_FOUND));
+        Workspace workspace = workspaceMongoRepository.findById(workspaceId).orElseThrow(() -> new RestApiException(WorkspaceErrorStatus.WORKSPACE_NOT_FOUND));
 
         if (!workspace.getUserId().equals(userId.toString())) throw new RestApiException(WorkspaceErrorStatus.MISMATCH_WORKSPACE_AND_USER);
         if (workspace.isDeleted()) throw new RestApiException(WorkspaceErrorStatus.DELETED_WORKSPACE);
@@ -98,7 +97,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
     public Workspace updateWorkspace(WorkspaceUpdateRequest request, Long workspaceId, String userId) {
 
         // 업데이트 할 워크스페이스 조회
-        Workspace updatedWorkspace = workspaceJpaRepository.findById(workspaceId.toString()).orElseThrow(() -> new RestApiException(WorkspaceErrorStatus.WORKSPACE_NOT_FOUND));
+        Workspace updatedWorkspace = workspaceMongoRepository.findById(workspaceId).orElseThrow(() -> new RestApiException(WorkspaceErrorStatus.WORKSPACE_NOT_FOUND));
 
         // BAD_REQUEST 체크
         if (updatedWorkspace.isDeleted()) throw new RestApiException(WorkspaceErrorStatus.DELETED_WORKSPACE);
@@ -108,23 +107,23 @@ public class WorkspaceServiceImpl implements WorkspaceService {
         updatedWorkspace.setTitle(request.title());
 
         // 수정된 워크스페이스 반환
-        return workspaceJpaRepository.save(updatedWorkspace);
+        return workspaceMongoRepository.save(updatedWorkspace);
     }
 
     @Override
     @Transactional
     public boolean deleteWorkspace(Long workspaceId, String userId) {
-        Workspace deletedWorkspace = workspaceJpaRepository.findById(workspaceId.toString()).orElseThrow(() -> new RestApiException(WorkspaceErrorStatus.WORKSPACE_NOT_FOUND));
+        Workspace deletedWorkspace = workspaceMongoRepository.findById(workspaceId).orElseThrow(() -> new RestApiException(WorkspaceErrorStatus.WORKSPACE_NOT_FOUND));
         if (deletedWorkspace.isDeleted()) throw new RestApiException(WorkspaceErrorStatus.DELETED_WORKSPACE);
         if (deletedWorkspace.getUserId().equals(userId)) throw new RestApiException(WorkspaceErrorStatus.DELETED_WORKSPACE);
         deletedWorkspace.delete();
-        return workspaceJpaRepository.save(deletedWorkspace).isDeleted();
+        return workspaceMongoRepository.save(deletedWorkspace).isDeleted();
     }
 
     @Override
     @Transactional
     public boolean updateWorkspaceMcpActivation(WorkspaceMcpUpdateRequest request, Long workspaceId, String userId) {
-        Workspace updatedWorkspace = workspaceJpaRepository.findById(workspaceId.toString()).orElseThrow(() -> new RestApiException(WorkspaceErrorStatus.WORKSPACE_NOT_FOUND));
+        Workspace updatedWorkspace = workspaceMongoRepository.findById(workspaceId).orElseThrow(() -> new RestApiException(WorkspaceErrorStatus.WORKSPACE_NOT_FOUND));
         if (updatedWorkspace.isDeleted()) throw new RestApiException(WorkspaceErrorStatus.DELETED_WORKSPACE);
         if (updatedWorkspace.getUserId().equals(userId)) throw new RestApiException(WorkspaceErrorStatus.DELETED_WORKSPACE);
 
@@ -136,7 +135,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
                         .ifPresent(reqMcp -> existingMcp.setActive(reqMcp.isActive()))
         );
 
-        workspaceJpaRepository.save(updatedWorkspace);
+        workspaceMongoRepository.save(updatedWorkspace);
         return true;
     }
 }

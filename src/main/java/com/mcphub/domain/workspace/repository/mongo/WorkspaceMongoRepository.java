@@ -1,4 +1,4 @@
-package com.mcphub.domain.workspace.repository.jpa;
+package com.mcphub.domain.workspace.repository.mongo;
 
 import com.mcphub.domain.workspace.entity.Workspace;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public interface WorkspaceJpaRepository extends MongoRepository<Workspace, String> {
+public interface WorkspaceMongoRepository extends MongoRepository<Workspace, Long> {
 
     Optional<Workspace> findTopByUserIdAndDeletedAtOrderByCreatedAtDesc(String userId, LocalDateTime deletedAt);
 

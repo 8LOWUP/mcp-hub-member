@@ -1,7 +1,7 @@
 package com.mcphub.domain.workspace.entity;
 
 import com.mcphub.domain.workspace.common.McpInfo;
-import com.mcphub.global.common.base.BaseEntity;
+import com.mcphub.global.common.base.BaseDocument;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,7 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class Workspace extends BaseEntity {
+public class Workspace extends BaseDocument {
 
     @Transient
     public static final String SEQUENCE_NAME = "workspace_sequence";

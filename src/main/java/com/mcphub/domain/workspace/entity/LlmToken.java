@@ -15,12 +15,12 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class LlmToken extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    private Long userId;
     private Llm llmId;
     private String token;
-    private boolean isActivate;
 }

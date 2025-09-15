@@ -1,9 +1,9 @@
 package com.mcphub.domain.workspace.controller;
 
-import com.mcphub.domain.workspace.adviser.LlmAdviser;
+import com.mcphub.domain.workspace.adviser.LlmTokenAdviser;
 import com.mcphub.domain.workspace.dto.request.LlmTokenRequest;
-import com.mcphub.domain.workspace.dto.response.LlmResponse;
-import com.mcphub.domain.workspace.dto.response.LlmTokenResponse;
+import com.mcphub.domain.workspace.dto.response.api.LlmResponse;
+import com.mcphub.domain.workspace.dto.response.api.LlmTokenResponse;
 import com.mcphub.domain.workspace.entity.enums.Llm;
 import com.mcphub.global.common.base.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -21,19 +21,12 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/llm")
-public class LlmController {
-    private final LlmAdviser llmAdviser;
+public class LlmTokenController {
+    private final LlmTokenAdviser llmTokenAdviser;
 
-    @GetMapping(path = "")
-    public BaseResponse<List<LlmResponse>> getLlmList() {
-        return BaseResponse.onSuccess(llmAdviser.getLlmList());
-    }
-
-    @GetMapping(path = "/token/{llmId}")
-    public BaseResponse<LlmTokenResponse> getToken(
-            @PathVariable("llmId") Llm llmId
-    ) {
-        return BaseResponse.onSuccess(llmAdviser.getToken(llmId));
+    @GetMapping(path = "/token")
+    public BaseResponse<LlmTokenResponse> getToken() {
+        return BaseResponse.onSuccess(llmTokenAdviser.getToken());
     }
 
     @Operation(summary = "사용자 LLM Token 입력 API", description = "사용자의 LLM Token을 입력받아 저장하는 API 입니다")
@@ -53,7 +46,7 @@ public class LlmController {
             @RequestBody LlmTokenRequest request
     ) {
 
-        return BaseResponse.onSuccess(llmAdviser.registerToken(request));
+        return BaseResponse.onSuccess(llmTokenAdviser.registerToken(request));
     }
 
     @Operation(summary = "사용자 LLM Token 수정 API", description = "사용자의 LLM Token을 입력받아 수정하는 API 입니다")
@@ -71,6 +64,6 @@ public class LlmController {
     public BaseResponse<LlmTokenResponse> updateToken(
             @RequestBody LlmTokenRequest request
     ) {
-        return BaseResponse.onSuccess(llmAdviser.updateToken(request));
+        return BaseResponse.onSuccess(llmTokenAdviser.updateToken(request));
     }
 }

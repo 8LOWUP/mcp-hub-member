@@ -2,9 +2,8 @@ package com.mcphub.domain.workspace.controller;
 
 import com.mcphub.domain.workspace.adviser.LlmTokenAdviser;
 import com.mcphub.domain.workspace.dto.request.LlmTokenRequest;
-import com.mcphub.domain.workspace.dto.response.api.LlmResponse;
-import com.mcphub.domain.workspace.dto.response.api.LlmTokenResponse;
-import com.mcphub.domain.workspace.entity.enums.Llm;
+import com.mcphub.domain.workspace.dto.response.api.LlmTokenListResponse;
+import com.mcphub.domain.workspace.dto.response.api.LlmTokenSaveResponse;
 import com.mcphub.global.common.base.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -15,8 +14,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @Tag(name = "LLM Token API", description = "사용자의 LLM Token을 저장하고 수정하는 API")
 @RestController
 @RequiredArgsConstructor
@@ -24,8 +21,15 @@ import java.util.List;
 public class LlmTokenController {
     private final LlmTokenAdviser llmTokenAdviser;
 
+    @Operation(summary = "사용자 LLM Token을 불러오는 API", description = "사용자의 LLM Token을 모두 불러오는 API 입니다")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "LLM Token 불러오기 성공"
+            )
+    })
     @GetMapping(path = "/token")
-    public BaseResponse<LlmTokenResponse> getToken() {
+    public BaseResponse<LlmTokenListResponse> getToken() {
         return BaseResponse.onSuccess(llmTokenAdviser.getToken());
     }
 
@@ -41,8 +45,7 @@ public class LlmTokenController {
             @Parameter(name = "llmToken", description = "사용자의 LLM Token값"),
     })
     @PostMapping(path = "/token")
-    public BaseResponse<LlmTokenResponse> registerToken(
-            @RequestHeader(value = "accessToken") String accessToken,
+    public BaseResponse<LlmTokenSaveResponse> registerToken(
             @RequestBody LlmTokenRequest request
     ) {
 
@@ -61,7 +64,7 @@ public class LlmTokenController {
             @Parameter(name = "llmToken", description = "사용자의 LLM Token값"),
     })
     @PatchMapping(path = "/token")
-    public BaseResponse<LlmTokenResponse> updateToken(
+    public BaseResponse<LlmTokenSaveResponse> updateToken(
             @RequestBody LlmTokenRequest request
     ) {
         return BaseResponse.onSuccess(llmTokenAdviser.updateToken(request));

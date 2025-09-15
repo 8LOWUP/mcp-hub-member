@@ -6,7 +6,7 @@ import lombok.Builder;
 import java.util.List;
 
 @Builder
-public record LlmTokenResponse(
+public record LlmTokenListResponse(
         List<LlmTokenDto> llmTokens
 ) {
     @Builder

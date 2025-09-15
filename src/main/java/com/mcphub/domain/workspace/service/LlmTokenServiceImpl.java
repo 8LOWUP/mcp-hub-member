@@ -2,9 +2,12 @@ package com.mcphub.domain.workspace.service;
 
 import com.mcphub.domain.workspace.dto.request.CreateLlmTokenCommand;
 import com.mcphub.domain.workspace.dto.request.UpdateLlmTokenCommand;
-import com.mcphub.domain.workspace.dto.response.api.LlmTokenResponse;
+import com.mcphub.domain.workspace.dto.response.api.LlmTokenListResponse;
 import com.mcphub.domain.workspace.entity.LlmToken;
 import com.mcphub.domain.workspace.repository.jpa.LlmTokenJapRepository;
+import com.mcphub.domain.workspace.repository.querydsl.LlmTokenDslRepository;
+import com.mcphub.domain.workspace.status.LlmErrorStatus;
+import com.mcphub.global.common.exception.RestApiException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class LlmTokenServiceImpl implements LlmTokenService {
     private final LlmTokenJapRepository llmTokenJapRepository;
+    private final LlmTokenDslRepository llmTokenDslRepository;
 
     @Transactional
     public List<LlmToken> get(Long userId) {
@@ -22,17 +26,24 @@ public class LlmTokenServiceImpl implements LlmTokenService {
     }
 
     @Transactional
-    public LlmTokenResponse create(CreateLlmTokenCommand cmd) {
-        LlmToken llmToken = new LlmToken(null, cmd.userId(), cmd.llmId(), cmd.llmToken());
-        //이미 유저가 등록한지 확인
-        //DB에 저장
-        return null;
+    public LlmToken create(CreateLlmTokenCommand cmd) {
+        //유저가 과거에 등록한적 있는지 확인
+        if (llmTokenDslRepository.existsByUserIdAndLlmId(cmd.userId(), cmd.llmId()))
+            throw new RestApiException(LlmErrorStatus.TOKEN_ALREADY_EXISTS);
+
+        return llmTokenJapRepository.save(new LlmToken(null, cmd.userId(), cmd.llmId(), cmd.llmToken()));
     }
 
     @Transactional
-    public LlmTokenResponse update(UpdateLlmTokenCommand cmd) {
+    public LlmToken update(UpdateLlmTokenCommand cmd) {
         //유저가 등록한 기록이 있는지 확인
+        if(!llmTokenDslRepository.existsByUserIdAndLlmId(cmd.userId(), cmd.llmId()))
+            throw new RestApiException(LlmErrorStatus.TOKEN_NOT_EXISTS);
+
         //DB 업데이트
-        return null;
+        LlmToken llmToken = llmTokenDslRepository.findByUserIdANdLlmId(cmd.userId(), cmd.llmId());
+        llmToken.setToken(cmd.llmToken());
+
+        return llmToken;
     }
 }

@@ -4,8 +4,8 @@ import com.mcphub.domain.workspace.converter.LlmTokenConverter;
 import com.mcphub.domain.workspace.dto.request.CreateLlmTokenCommand;
 import com.mcphub.domain.workspace.dto.request.LlmTokenRequest;
 import com.mcphub.domain.workspace.dto.request.UpdateLlmTokenCommand;
-import com.mcphub.domain.workspace.dto.response.api.LlmResponse;
-import com.mcphub.domain.workspace.dto.response.api.LlmTokenResponse;
+import com.mcphub.domain.workspace.dto.response.api.LlmTokenListResponse;
+import com.mcphub.domain.workspace.dto.response.api.LlmTokenSaveResponse;
 import com.mcphub.domain.workspace.entity.LlmToken;
 import com.mcphub.domain.workspace.llm.tokenvalidator.TokenValidatorManager;
 import com.mcphub.domain.workspace.mapper.LlmTokenMapper;
@@ -25,26 +25,27 @@ public class LlmTokenAdviser {
     private final SecurityUtils securityUtils;
     private final TokenValidatorManager tokenValidatorManager;
 
-    public LlmTokenResponse getToken() {
+    public LlmTokenListResponse getToken() {
         Long userId = securityUtils.getUserId();
         List<LlmToken> result = llmTokenService.get(userId);
-        return llmTokenConverter.toLlmTokenResponse(result);
+        return llmTokenConverter.toLlmTokenListResponse(result);
     }
 
-    public LlmTokenResponse registerToken(LlmTokenRequest request) {
+    public LlmTokenSaveResponse registerToken(LlmTokenRequest request) {
         tokenValidatorManager.validateToken(request);
 
         Long userId = securityUtils.getUserId();
         CreateLlmTokenCommand cmd = llmTokenMapper.toCreateCommand(request, userId);
-        return llmTokenService.create(cmd);
+        LlmToken llmToken = llmTokenService.create(cmd);
+        return llmTokenConverter.toLlmTokenSaveResponse(llmToken);
     }
 
-    public LlmTokenResponse updateToken(LlmTokenRequest request)  {
+    public LlmTokenSaveResponse updateToken(LlmTokenRequest request)  {
         tokenValidatorManager.validateToken(request);
 
         Long userId = securityUtils.getUserId();
         UpdateLlmTokenCommand cmd = llmTokenMapper.toUpdateCommand(request, userId);
-
-        return llmTokenService.update(cmd);
+        LlmToken llmToken = llmTokenService.update(cmd);
+        return llmTokenConverter.toLlmTokenSaveResponse(llmToken);
     }
 }

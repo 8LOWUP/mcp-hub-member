@@ -74,7 +74,7 @@ public class WorkspaceController {
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "MCP 활성화 여부 수정 성공")
     })
-    @PatchMapping(path = "/{workspaceId}")
+    @PatchMapping(path = "/{workspaceId}/mcps")
     public BaseResponse<?> updateActivatedMcpsInWorkspace(
             @PathVariable("workspaceId") Long workspaceId,
             @RequestBody WorkspaceMcpUpdateRequest request

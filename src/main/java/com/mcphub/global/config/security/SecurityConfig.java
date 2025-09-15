@@ -3,7 +3,7 @@ package com.mcphub.global.config.security;
 import org.springframework.http.MediaType;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import com.mcphub.domain.member.entity.enums.Role;
+
 import com.mcphub.domain.member.service.member.MemberService;
 import com.mcphub.global.config.security.auth.CustomAccessDeniedHandler;
 import com.mcphub.global.config.security.jwt.JwtAuthenticationFilter;
@@ -31,9 +31,6 @@ public class SecurityConfig {
     private final JwtProvider jwtProvider;
     private final MemberService memberService;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
-/*
-    private final PrincipalDetailsService principalDetailsService;
-*/
 
 
     @Bean
@@ -41,32 +38,21 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configure(http))
-                //.userDetailsService(principalDetailsService)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**").permitAll()
                         .requestMatchers("/s3/**").permitAll()
-                        .requestMatchers("/members/signup", "/members/auth/login").permitAll()
-                        .requestMatchers("/members/login").permitAll()
-                        //회원가입, 로그인
-                        .requestMatchers("/web/admin/auth/login", "/web/admin/auth/signup", "web/admin/members/code/verify" ,"web/admin/members/create/university-code").permitAll()
-                        .requestMatchers("/members/auth/signup", "/members/auth/social/login", "/members/auth/token/refresh", "members/code/verify").permitAll()
-
-                        //Challenger
-                        .requestMatchers("/suggestion/**").hasAnyAuthority("ROLE_"+Role.SCHOOL_ADMIN, "ROLE_"+Role.CENTRAL_ADMIN, "ROLE_"+Role.ADMIN, "ROLE_"+Role.CHALLENGER, "ROLE_"+Role.UNIVERSITY_STAFF)
-                        .requestMatchers("/members/**").hasAnyAuthority("ROLE_"+Role.SCHOOL_ADMIN, "ROLE_"+Role.CENTRAL_ADMIN, "ROLE_"+Role.ADMIN, "ROLE_"+Role.CHALLENGER, "ROLE_"+Role.UNIVERSITY_STAFF)
-
-                        //Admin Web Security
-                        .requestMatchers("/web/admin/**").hasAnyAuthority("ROLE_"+Role.SCHOOL_ADMIN, "ROLE_"+Role.CENTRAL_ADMIN, "ROLE_"+Role.ADMIN)
+                        .requestMatchers("/auth/social/**").permitAll()
+                        .requestMatchers( "/auth/token").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling ->
                         exceptionHandling.accessDeniedHandler(customAccessDeniedHandler)
                                 .authenticationEntryPoint(authenticationEntryPoint()))
                 .addFilterBefore(new JwtExceptionFilter(), LogoutFilter.class) // filter 등록시 등록되어있는 필터와 순서를 정의해야함
-                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider, memberService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

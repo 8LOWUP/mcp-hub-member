@@ -6,6 +6,4 @@ public interface MemberService {
     void existById(Long memberId);
     Member findById(Long memberId);
     Member findByIdNotFetchLoginInfo(Long memberId);
-    void modifyMyProfileAvatar(Member member,
-                                 String avatarUrl);
 }

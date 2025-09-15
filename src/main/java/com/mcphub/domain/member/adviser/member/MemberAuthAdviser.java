@@ -1,49 +1,46 @@
 package com.mcphub.domain.member.adviser.member;
 
-import io.jsonwebtoken.Claims;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import com.mcphub.domain.member.dto.response.member.auth.MemberCreateTokenResponse;
-import com.mcphub.domain.member.dto.response.member.common.MemberIdResponse;
-import com.mcphub.domain.member.dto.response.member.auth.MemberLoginResponse;
-import com.mcphub.domain.member.entity.Member;
-import com.mcphub.domain.member.entity.enums.LoginType;
-import com.mcphub.domain.member.service.auth.MemberAuthService;
-import com.mcphub.domain.member.service.auth.MemberRefreshTokenService;
-import com.mcphub.domain.member.service.member.MemberService;
+
+import com.mcphub.domain.member.client.KakaoOAuth2Client;
+import com.mcphub.domain.member.converter.response.MemberResponseConverter;
+import com.mcphub.domain.member.dto.response.api.SocialLoginResponse;
+import com.mcphub.domain.member.dto.response.readmodel.KakaoProfile;
+import com.mcphub.domain.member.dto.response.readmodel.MemberRM;
+import com.mcphub.domain.member.repository.redis.impl.MemberRedisRepositoryImpl;
+import com.mcphub.domain.member.service.auth.port.MemberCommandPort;
+import com.mcphub.global.config.security.jwt.JwtProvider;
+import com.mcphub.global.config.security.jwt.TokenInfo;
+
+import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
 public class MemberAuthAdviser {
-    private final MemberAuthService memberAuthService;
-    private final MemberService memberService;
-    private final MemberRefreshTokenService memberRefreshTokenService;
 
-    public MemberLoginResponse socialLogin(
-            String accessToken,
-            LoginType loginType
-    ) {
-        return memberAuthService.socialLogin(accessToken, loginType);
-    }
+	private final MemberCommandPort memberCommandPort;
+	private final JwtProvider jwtProvider;
+	private final MemberResponseConverter responseConverter;
+	private final KakaoOAuth2Client kakaoClient;
+	private final MemberRedisRepositoryImpl redisRepository;
 
-    public MemberCreateTokenResponse regenerateToken(
-            String refreshToken
-    ) {
-        Claims claims = memberRefreshTokenService.getClaims(refreshToken);
-        Long memberId = Long.parseLong(claims.get("memberId").toString());
-        Member member = memberService.findById(memberId);
-        return memberAuthService.generateNewAccessToken(refreshToken, member);
-    }
+	public SocialLoginResponse kakaoLogin(String code) {
+		KakaoProfile profile = kakaoClient.getProfile(code);
+		MemberRM member = memberCommandPort.saveOrUpdate(
+			profile.getKakao_account().getEmail(),
+			profile.getKakao_account().getProfile().getNickname()
+		);
 
-    public MemberIdResponse logout(
-            Member member
-    ) {
-        return memberAuthService.logout(member);
-    }
+		TokenInfo token = jwtProvider.generateToken(member.id().toString());
 
-    public MemberIdResponse withdrawal(
-            Member member
-    ) {
-        return memberAuthService.withdrawal(member);
-    }
+		redisRepository.save(member.id(),token.refreshToken());
+
+		return responseConverter.toSocialLoginResponse(token, member);
+	}
+
+	public SocialLoginResponse regenerateToken(String refreshToken) {
+		TokenInfo tokenInfo = memberCommandPort.reissueAccessToken(refreshToken);
+		return responseConverter.toRegenerateTokenResponse(tokenInfo);
+	}
 }
+

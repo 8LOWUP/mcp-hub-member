@@ -1,6 +1,5 @@
 package com.mcphub.domain.member.service.member;
 
-import jakarta.transaction.Transactional;
 import com.mcphub.domain.member.entity.Member;
 import com.mcphub.domain.member.repository.querydsl.MemberDslRepository;
 import com.mcphub.global.common.exception.RestApiException;
@@ -22,18 +21,14 @@ public class MemberServiceImpl implements MemberService {
 
     public Member findById(Long memberId) throws UsernameNotFoundException {
         return memberDslRepository.findByIdNotFetchLoginInfo(memberId)
-                .orElseThrow(() -> new RestApiException(MEMBER_NOT_FOUND));
+            .orElseThrow(() -> new RestApiException(MEMBER_NOT_FOUND));
     }
 
     @Override
     public Member findByIdNotFetchLoginInfo(Long memberId) {
         return memberDslRepository.findByIdNotFetchLoginInfo(memberId)
-                .orElseThrow(() -> new RestApiException(MEMBER_NOT_FOUND));
+            .orElseThrow(() -> new RestApiException(MEMBER_NOT_FOUND));
     }
 
-    @Transactional
-    @Override
-    public void modifyMyProfileAvatar(Member member, String avatarUrl) {
-        memberDslRepository.updateAvatarImage(member, avatarUrl);
-    }
+
 }

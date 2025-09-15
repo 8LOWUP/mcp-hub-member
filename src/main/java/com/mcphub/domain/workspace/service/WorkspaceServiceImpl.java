@@ -103,7 +103,7 @@ public class WorkspaceServiceImpl implements WorkspaceService {
 
         // BAD_REQUEST 체크
         if (updatedWorkspace.isDeleted()) throw new RestApiException(WorkspaceErrorStatus.DELETED_WORKSPACE);
-        if (updatedWorkspace.getUserId().equals(userId))
+        if (!updatedWorkspace.getUserId().equals(userId))
             throw new RestApiException(WorkspaceErrorStatus.MISMATCH_WORKSPACE_AND_USER);
 
         // 워크스페이스 이름 수정

@@ -21,13 +21,10 @@ import java.util.List;
 @Setter
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-public class Workspace extends BaseDocument implements Persistable<Long> {
-
-    @Transient
-    public static final String SEQUENCE_NAME = "workspace_sequence";
+public class Workspace extends BaseDocument implements Persistable<String> {
 
     @Id
-    private Long id;
+    private String id;
     private String llmId;   // bigint -> String
     private String userId;  // bigint -> String
     private String title;   // text

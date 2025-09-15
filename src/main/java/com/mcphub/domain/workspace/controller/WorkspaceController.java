@@ -5,7 +5,9 @@ import com.mcphub.domain.workspace.dto.request.WorkspaceCreateRequest;
 import com.mcphub.domain.workspace.dto.request.WorkspaceMcpUpdateRequest;
 import com.mcphub.domain.workspace.dto.request.WorkspaceUpdateRequest;
 import com.mcphub.domain.workspace.dto.response.WorkspaceCreateResponse;
+import com.mcphub.domain.workspace.dto.response.WorkspaceDetailResponse;
 import com.mcphub.domain.workspace.dto.response.WorkspaceHistoryResponse;
+import com.mcphub.domain.workspace.dto.response.WorkspaceUpdateResponse;
 import com.mcphub.domain.workspace.status.WorkspaceErrorStatus;
 import com.mcphub.global.common.base.BaseResponse;
 import io.swagger.v3.oas.annotations.Operation;
@@ -52,8 +54,8 @@ public class WorkspaceController {
             @ApiResponse(responseCode = "200", description = "워크스페이스 상세 조회 성공")
     })
     @GetMapping(path = "/{workspaceId}")
-    public BaseResponse<?> getWorkspaceDetail(
-            @PathVariable("workspaceId") Long workspaceId
+    public BaseResponse<WorkspaceDetailResponse> getWorkspaceDetail(
+            @PathVariable("workspaceId") String workspaceId
     ) {
         return BaseResponse.onSuccess(workspaceAdviser.getWorkspaceDetail(workspaceId));
     }
@@ -63,8 +65,8 @@ public class WorkspaceController {
             @ApiResponse(responseCode = "200", description = "워크스페이스 제목 수정 성공")
     })
     @PatchMapping(path = "/{workspaceId}")
-    public BaseResponse<?> updateWorkspaceName(
-            @PathVariable("workspaceId") Long workspaceId,
+    public BaseResponse<WorkspaceUpdateResponse> updateWorkspaceName(
+            @PathVariable("workspaceId") String workspaceId,
             @RequestBody WorkspaceUpdateRequest request
     ) {
         return BaseResponse.onSuccess(workspaceAdviser.updateWorkspaceName(workspaceId, request));
@@ -75,8 +77,8 @@ public class WorkspaceController {
             @ApiResponse(responseCode = "200", description = "MCP 활성화 여부 수정 성공")
     })
     @PatchMapping(path = "/{workspaceId}/mcps")
-    public BaseResponse<?> updateActivatedMcpsInWorkspace(
-            @PathVariable("workspaceId") Long workspaceId,
+    public BaseResponse<String> updateActivatedMcpsInWorkspace(
+            @PathVariable("workspaceId") String workspaceId,
             @RequestBody WorkspaceMcpUpdateRequest request
     ) {
         if (workspaceAdviser.updateActivatedMcpsInWorkspace(workspaceId, request))
@@ -89,8 +91,8 @@ public class WorkspaceController {
             @ApiResponse(responseCode = "200", description = "워크스페이스 삭제 성공")
     })
     @DeleteMapping(path = "/{workspaceId}")
-    public BaseResponse<?> deleteWorkspace(
-            @PathVariable("workspaceId") Long workspaceId
+    public BaseResponse<String> deleteWorkspace(
+            @PathVariable("workspaceId") String workspaceId
     ) {
         if (workspaceAdviser.deleteWorkspace(workspaceId)) return BaseResponse.onSuccess("워크스페이스 삭제 성공");
         return BaseResponse.onFailure(Integer.toString(HttpStatus.INTERNAL_SERVER_ERROR.value()), "요청에 실패하였습니다.", null);

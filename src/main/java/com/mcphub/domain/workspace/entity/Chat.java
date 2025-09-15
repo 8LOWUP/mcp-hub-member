@@ -16,13 +16,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Setter
 @Builder
 @EntityListeners(AuditingEntityListener.class)
-public class Chat extends BaseDocument implements Persistable<Long> {
-
-    @Transient
-    public static final String SEQUENCE_NAME = "chat_sequence";
+public class Chat extends BaseDocument implements Persistable<String> {
 
     @Id
-    private Long id;
+    private String id;
     private String workspaceId;
     private String chat;
     private boolean senderType;

@@ -6,7 +6,6 @@ import java.time.LocalDateTime;
 
 @Builder
 public record WorkspaceUpdateRequest(
-        String workspaceId,
         String title
 
 ) {

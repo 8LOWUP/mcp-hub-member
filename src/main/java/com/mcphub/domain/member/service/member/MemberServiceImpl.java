@@ -16,18 +16,18 @@ public class MemberServiceImpl implements MemberService {
 
     @Override
     public void existById(Long memberId) {
-        if(!memberDslRepository.existById(memberId)) throw new RestApiException(MEMBER_NOT_FOUND);
+        if (!memberDslRepository.existById(memberId)) throw new RestApiException(MEMBER_NOT_FOUND);
     }
 
     public Member findById(Long memberId) throws UsernameNotFoundException {
         return memberDslRepository.findByIdNotFetchLoginInfo(memberId)
-            .orElseThrow(() -> new RestApiException(MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new RestApiException(MEMBER_NOT_FOUND));
     }
 
     @Override
     public Member findByIdNotFetchLoginInfo(Long memberId) {
         return memberDslRepository.findByIdNotFetchLoginInfo(memberId)
-            .orElseThrow(() -> new RestApiException(MEMBER_NOT_FOUND));
+                .orElseThrow(() -> new RestApiException(MEMBER_NOT_FOUND));
     }
 
 

@@ -5,8 +5,9 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 @Builder
-public record WorkspaceUpdateRequest (
+public record WorkspaceUpdateRequest(
         String workspaceId,
         String title
 
-) {}
+) {
+}

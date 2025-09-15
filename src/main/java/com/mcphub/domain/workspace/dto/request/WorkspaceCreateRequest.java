@@ -6,8 +6,9 @@ import lombok.Builder;
 import java.util.List;
 
 @Builder
-public record WorkspaceCreateRequest (
+public record WorkspaceCreateRequest(
         String llmId,
         List<McpInfo> mcps,
         String chatRequest
-) {}
+) {
+}

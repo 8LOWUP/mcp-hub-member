@@ -4,6 +4,7 @@ import com.mcphub.domain.workspace.common.McpInfo;
 
 import java.util.List;
 
-public record WorkspaceMcpUpdateRequest (
+public record WorkspaceMcpUpdateRequest(
         List<McpInfo> mcps
-) {}
+) {
+}

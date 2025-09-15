@@ -33,7 +33,7 @@ public class WorkspaceController {
     @PostMapping()
     public BaseResponse<WorkspaceCreateResponse> createWorkspace(
             @RequestBody WorkspaceCreateRequest request
-            ) {
+    ) {
         return BaseResponse.onSuccess(workspaceAdviser.createWorkspace(request));
     }
 
@@ -79,7 +79,8 @@ public class WorkspaceController {
             @PathVariable("workspaceId") Long workspaceId,
             @RequestBody WorkspaceMcpUpdateRequest request
     ) {
-        if(workspaceAdviser.updateActivatedMcpsInWorkspace(workspaceId, request)) return BaseResponse.onSuccess("워크스페이스 mcp 활성화 수정 성공");
+        if (workspaceAdviser.updateActivatedMcpsInWorkspace(workspaceId, request))
+            return BaseResponse.onSuccess("워크스페이스 mcp 활성화 수정 성공");
         return BaseResponse.onFailure(Integer.toString(HttpStatus.INTERNAL_SERVER_ERROR.value()), "요청에 실패하였습니다.", null);
     }
 

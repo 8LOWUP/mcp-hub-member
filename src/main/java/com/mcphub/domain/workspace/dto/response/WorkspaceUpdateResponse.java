@@ -9,4 +9,5 @@ public record WorkspaceUpdateResponse(
         String workspaceId,
         String title,
         LocalDateTime updatedAt
-) {}
+) {
+}

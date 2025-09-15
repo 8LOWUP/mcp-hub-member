@@ -5,8 +5,9 @@ import lombok.Builder;
 import java.time.LocalDateTime;
 
 @Builder
-public record WorkspaceHistoryResponse (
+public record WorkspaceHistoryResponse(
         String title,
         String workspaceId,
         LocalDateTime createdAt
-) {}
+) {
+}

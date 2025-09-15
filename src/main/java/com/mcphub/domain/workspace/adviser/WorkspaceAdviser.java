@@ -48,7 +48,7 @@ public class WorkspaceAdviser {
         // 최초 워크스페이스 생성이라면, request 로부터 설정값을 받아서 생성
         // 기존에 워크스페이스가 존재했다면, 가장 최근의 워크스페이스 설정을 참조해서 생성
         return Objects.isNull(recentWorkspace) ?
-                workspaceConverter.toWorkspaceCreateResponse(workspaceService.createWorkspace(request, _id, userId.toString(),workspaceName), response)
+                workspaceConverter.toWorkspaceCreateResponse(workspaceService.createWorkspace(request, _id, userId.toString(), workspaceName), response)
                 : workspaceConverter.toWorkspaceCreateResponse(workspaceService.createWorkspaceByRecentWorkspace(recentWorkspace, _id, userId.toString(), workspaceName), response);
     }
 

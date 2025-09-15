@@ -2,8 +2,6 @@ package com.mcphub.global.config.security.jwt;
 
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.filter.OncePerRequestFilter;
-import com.mcphub.domain.member.entity.Member;
-import com.mcphub.domain.member.service.member.MemberService;
 import com.mcphub.global.config.security.auth.PrincipalDetails;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
@@ -21,7 +19,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     // 오직 인증 정보를 설정하는 역할만 수행
 
     private final JwtProvider jwtTokenProvider;
-    private final MemberService memberService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws ServletException, IOException {
@@ -36,13 +33,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private Authentication getAuthentication(String token) {
         Claims claims = jwtTokenProvider.getClaims(token);
-        String role = claims.get("role", String.class);
 
         Long memberId = Long.valueOf(claims.get("memberId", String.class)); // memberId 가져옴
-        Member member = memberService.findById(memberId); // Member 객체 조회
 
         // PrincipalDetails 사용
-        PrincipalDetails principalDetails = new PrincipalDetails(member);
+        PrincipalDetails principalDetails = new PrincipalDetails(memberId);
 
         return new UsernamePasswordAuthenticationToken(principalDetails, "", principalDetails.getAuthorities());
     }

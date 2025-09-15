@@ -4,41 +4,37 @@ import com.mcphub.domain.member.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-
 @Getter
-@AllArgsConstructor // 생성자를 만들어줌
+@AllArgsConstructor
 public class PrincipalDetails implements UserDetails {
-    private Member member;
+    private Long memberId;
+
     public BCryptPasswordEncoder encodePwd() {
         return new BCryptPasswordEncoder();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
-        // ROLE_USER, ROLE_ADMIN에 따라 권한 설정하기 위해, authorities에 추가
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + member.getRole().toString()));
-        return authorities;
+        // 권한을 사용하지 않으므로 빈 리스트 반환
+        return new ArrayList<>();
     }
 
-    @Override                    // 소셜 로그인만 지원해서 pwd 필요 없음
+    @Override
     public String getPassword() {
-        // 소셜 로그인만 지원하므로 비밀번호가 필요하지 않음
+        // 소셜 로그인만 지원하므로 비밀번호는 필요 없음
         return "";
-        //return encodePwd().encode("this is password");
     }
 
     @Override
     public String getUsername() {
-        // member의 ID를 username으로 사용 (PrincipalDetailsService에서 long으로 변환)
-        return member.getId().toString();
+        // member의 id를 username으로 사용
+        return memberId.toString();
     }
 
     @Override
@@ -56,10 +52,9 @@ public class PrincipalDetails implements UserDetails {
         return true;
     }
 
-    @Override
-    public boolean isEnabled() {
-        return member.getDeletedAt() == null;
-    }
-
-
+    // @Override
+    // public boolean isEnabled() {
+    //     return member.getDeletedAt() == null;
+    // }
 }
+

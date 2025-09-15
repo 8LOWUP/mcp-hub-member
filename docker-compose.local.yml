@@ -32,6 +32,23 @@ services:
         ipv4_address: ${NETWORK_REDIS_IP}
     restart: always
 
+  mongodb:
+    container_name: mongodb-mcp-market-local
+    image: mongo:latest
+    ports:
+      - target: ${MONGODB_INNER_PORT}
+        published: ${MONGODB_OUTER_PORT}
+        protocol: tcp
+        host_ip: 0.0.0.0
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGODB_DATABASE}
+    networks:
+      mm_local_network:
+        ipv4_address: ${NETWORK_MONGODB_IP}
+    restart: always
+
 networks:
   mm_local_network:
     name: mm_local_network

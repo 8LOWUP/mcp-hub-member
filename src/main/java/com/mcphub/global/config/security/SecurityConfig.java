@@ -4,7 +4,7 @@ import com.mcphub.global.ratelimit.RateLimitFilter;
 import org.springframework.http.MediaType;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import com.mcphub.domain.member.entity.enums.Role;
+
 import com.mcphub.domain.member.service.member.MemberService;
 import com.mcphub.global.config.security.auth.CustomAccessDeniedHandler;
 import com.mcphub.global.config.security.jwt.JwtAuthenticationFilter;
@@ -44,25 +44,14 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(cors -> cors.configure(http))
-                //.userDetailsService(principalDetailsService)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html", "/webjars/**").permitAll()
                         .requestMatchers("/s3/**").permitAll()
-                        .requestMatchers("/members/signup", "/members/auth/login").permitAll()
-                        .requestMatchers("/members/login").permitAll()
-                        //회원가입, 로그인
-                        .requestMatchers("/web/admin/auth/login", "/web/admin/auth/signup", "web/admin/members/code/verify" ,"web/admin/members/create/university-code").permitAll()
-                        .requestMatchers("/members/auth/signup", "/members/auth/social/login", "/members/auth/token/refresh", "members/code/verify").permitAll()
-
-                        //Challenger
-                        .requestMatchers("/suggestion/**").hasAnyAuthority("ROLE_"+Role.SCHOOL_ADMIN, "ROLE_"+Role.CENTRAL_ADMIN, "ROLE_"+Role.ADMIN, "ROLE_"+Role.CHALLENGER, "ROLE_"+Role.UNIVERSITY_STAFF)
-                        .requestMatchers("/members/**").hasAnyAuthority("ROLE_"+Role.SCHOOL_ADMIN, "ROLE_"+Role.CENTRAL_ADMIN, "ROLE_"+Role.ADMIN, "ROLE_"+Role.CHALLENGER, "ROLE_"+Role.UNIVERSITY_STAFF)
-
-                        //Admin Web Security
-                        .requestMatchers("/web/admin/**").hasAnyAuthority("ROLE_"+Role.SCHOOL_ADMIN, "ROLE_"+Role.CENTRAL_ADMIN, "ROLE_"+Role.ADMIN)
+                        .requestMatchers("/auth/social/**").permitAll()
+                        .requestMatchers( "/auth/token").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exceptionHandling ->

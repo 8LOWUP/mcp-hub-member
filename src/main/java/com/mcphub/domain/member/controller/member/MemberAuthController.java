@@ -5,45 +5,40 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import com.mcphub.domain.member.adviser.member.MemberAuthAdviser;
-import com.mcphub.domain.member.entity.Member;
-import com.mcphub.domain.member.entity.enums.LoginType;
-import com.mcphub.domain.member.dto.response.member.auth.MemberCreateTokenResponse;
-import com.mcphub.domain.member.dto.response.member.common.MemberIdResponse;
-import com.mcphub.domain.member.dto.response.member.auth.MemberLoginResponse;
+import com.mcphub.domain.member.dto.response.api.SocialLoginResponse;
 import com.mcphub.global.common.base.BaseResponse;
-import com.mcphub.global.config.security.auth.CurrentMember;
+
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name = "일반 사용자(App)용 Member Auth API", description = "일반 사용자(App)용 Member Auth 관련 API")
+@Tag(name = "Member Auth API", description = "Member Auth 관련 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/members/auth")
+@RequestMapping("/auth")
 public class MemberAuthController {
+
     private final MemberAuthAdviser memberAuthAdviser;
 
-    @Operation(summary = "소셜 로그인 API", description = "네이버, 카카오, 구글 로그인을 수행하는 API입니다. 소셜 로그인은 App 전용입니다.")
+    @Operation(summary = "소셜 카카오 로그인 API", description = "카카오 로그인을 수행하는 API입니다.")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
-                    description = "App 소셜 로그인 성공"
+                    description = "카카오 소셜 로그인 성공"
             )
     })
     @Parameters({
-            @Parameter(name = "accessToken", description = "Social에서 발급받은 accessToken(Apple은 id_token)"),
-            @Parameter(name = "loginType", description = "Social의 종류"),
+            @Parameter(name = "code", description = "인증 코드를 받아옵니다."),
     })
-    @PostMapping("/social/login")
-    public BaseResponse<MemberLoginResponse> socialLogin(
-            @RequestHeader(value = "accessToken") String accessToken,
-            @RequestParam(value = "loginType") LoginType loginType
-    ) {
-        return BaseResponse.onSuccess(memberAuthAdviser.socialLogin(accessToken, loginType));
+    @GetMapping("/social/kakao")
+    public BaseResponse<SocialLoginResponse> kakaoLogin(
+            @RequestParam String code) {
+        return BaseResponse.onSuccess(memberAuthAdviser.kakaoLogin(code));
     }
 
-    @Operation(summary = "accessToken 재발급 API", description = "refreshToken가 유효하다면 새로운 accessToken을 발급하는 API입니다.")
+
+    @Operation(summary = "accessToken, refreshToken 재발급 API", description = "refreshToken가 유효하다면 새로운 accessToken을 발급하는 API입니다.")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
@@ -53,28 +48,29 @@ public class MemberAuthController {
     @Parameters({
             @Parameter(name = "refreshToken", description = "로그인시 받는 refreshToken"),
     })
-    @GetMapping("/token/refresh")
-    public BaseResponse<MemberCreateTokenResponse> regenerateToken(
-            @RequestHeader(value = "refreshToken") String refreshToken
-    ) {
+    @PostMapping("/token/reissue")
+    public BaseResponse<SocialLoginResponse> reissue(@RequestParam String refreshToken) {
         return BaseResponse.onSuccess(memberAuthAdviser.regenerateToken(refreshToken));
     }
 
-    @Operation(summary = "로그아웃 API", description = "해당 유저의 refreshToken을 삭제하는 API입니다.")
-    @DeleteMapping("/logout")
-    public BaseResponse<MemberIdResponse> logout(
-            @CurrentMember Member member
-    ) {
-        return BaseResponse.onSuccess(memberAuthAdviser.logout(member));
-    }
 
-    @Operation(summary = "회원 탈퇴 API", description = "해당 유저 정보를 삭제하는 API입니다.")
-    @DeleteMapping
-    public BaseResponse<MemberIdResponse> withdrawal(
-            @CurrentMember Member member
-    ) {
-        return BaseResponse.onSuccess(memberAuthAdviser.withdrawal(member));
-    }
+
+    //
+    // @Operation(summary = "로그아웃 API", description = "해당 유저의 refreshToken을 삭제하는 API입니다.")
+    // @DeleteMapping("/logout")
+    // public BaseResponse<MemberIdResponse> logout(
+    //         @CurrentMember Member member
+    // ) {
+    //     return BaseResponse.onSuccess(memberAuthAdviser.logout(member));
+    // }
+    //
+    // @Operation(summary = "회원 탈퇴 API", description = "해당 유저 정보를 삭제하는 API입니다.")
+    // @DeleteMapping
+    // public BaseResponse<MemberIdResponse> withdrawal(
+    //         @CurrentMember Member member
+    // ) {
+    //     return BaseResponse.onSuccess(memberAuthAdviser.withdrawal(member));
+    // }
 
 }
 

@@ -23,11 +23,10 @@ public class FileController {
     @PostMapping(value = "/{category}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @Operation(summary = "파일 업로드 API", description = "파일을 생성하는 API입니다. jpg, mp3, mp4 등 다양한 파일을 업로드할 수 있습니다.")
     public BaseResponse<FileCreateResponse> createFile
-            (       @PathVariable("category") String category,
-                    @Valid @Parameter(content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE) )
-                    @RequestPart("file") MultipartFile file
-            )
-    {
+            (@PathVariable("category") String category,
+             @Valid @Parameter(content = @Content(mediaType = MediaType.MULTIPART_FORM_DATA_VALUE))
+             @RequestPart("file") MultipartFile file
+            ) {
         return BaseResponse.onSuccess(fileService.createFile(category, file));
     }
 
@@ -36,7 +35,7 @@ public class FileController {
     public BaseResponse<FileCreateResponse> createPresignedUrl(
             @PathVariable("category") String category,
             @RequestParam("fileName") String fileName
-    ){
+    ) {
         return BaseResponse.onSuccess(fileService.createPresignedUrl(category, fileName));
     }
 

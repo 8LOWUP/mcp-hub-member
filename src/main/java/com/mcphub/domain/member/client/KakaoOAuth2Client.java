@@ -14,29 +14,29 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class KakaoOAuth2Client {
-	private final WebClient webClient = WebClient.create();
-	private final KakaoOAuth2Properties properties;
+    private final WebClient webClient = WebClient.create();
+    private final KakaoOAuth2Properties properties;
 
-	public KakaoProfile getProfile(String code) {
-		String accessToken = webClient.post()
-			.uri(properties.getTokenUri())
-			.contentType(MediaType.APPLICATION_FORM_URLENCODED)
-			.body(BodyInserters.fromFormData("grant_type", "authorization_code")
-				.with("client_id", properties.getClientId())
-				.with("redirect_uri", properties.getRedirectUri())
-				.with("code", code))
-			.retrieve()
-			.bodyToMono(JsonNode.class)
-			.block()
-			.get("access_token").asText();
+    public KakaoProfile getProfile(String code) {
+        String accessToken = webClient.post()
+                .uri(properties.getTokenUri())
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .body(BodyInserters.fromFormData("grant_type", "authorization_code")
+                        .with("client_id", properties.getClientId())
+                        .with("redirect_uri", properties.getRedirectUri())
+                        .with("code", code))
+                .retrieve()
+                .bodyToMono(JsonNode.class)
+                .block()
+                .get("access_token").asText();
 
-		return webClient.get()
-			.uri(properties.getUserInfoUri())
-			.header("Authorization", "Bearer " + accessToken)
-			.retrieve()
-			.bodyToMono(KakaoProfile.class)
-			.block();
-	}
+        return webClient.get()
+                .uri(properties.getUserInfoUri())
+                .header("Authorization", "Bearer " + accessToken)
+                .retrieve()
+                .bodyToMono(KakaoProfile.class)
+                .block();
+    }
 }
 
 

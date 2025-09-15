@@ -4,6 +4,7 @@ import com.mcphub.domain.member.dto.response.readmodel.MemberRM;
 import com.mcphub.global.config.security.jwt.TokenInfo;
 
 public interface MemberCommandPort {
-	MemberRM saveOrUpdate(String email, String nickname);
-	TokenInfo reissueAccessToken(String refreshToken);
+    MemberRM saveOrUpdate(String email, String nickname);
+
+    TokenInfo reissueAccessToken(String refreshToken);
 }

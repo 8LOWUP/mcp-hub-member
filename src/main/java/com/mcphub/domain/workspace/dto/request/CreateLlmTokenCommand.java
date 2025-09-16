@@ -7,6 +7,6 @@ import lombok.Builder;
 public record CreateLlmTokenCommand (
         Llm llmId,
         String llmToken,
-        Long userId
+        String userId
 ) {
 }

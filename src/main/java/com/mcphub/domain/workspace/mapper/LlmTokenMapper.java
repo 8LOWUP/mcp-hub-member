@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class LlmTokenMapper {
-    public CreateLlmTokenCommand toCreateCommand(LlmTokenRequest request, Long userId) {
+    public CreateLlmTokenCommand toCreateCommand(LlmTokenRequest request, String userId) {
         return CreateLlmTokenCommand.builder()
                 .llmId(request.llmId())
                 .llmToken(request.llmToken())
@@ -18,7 +18,7 @@ public class LlmTokenMapper {
                 .build();
     }
 
-    public UpdateLlmTokenCommand toUpdateCommand(LlmTokenRequest request, Long userId) {
+    public UpdateLlmTokenCommand toUpdateCommand(LlmTokenRequest request, String userId) {
         return UpdateLlmTokenCommand.builder()
                 .llmId(request.llmId())
                 .llmToken(request.llmToken())

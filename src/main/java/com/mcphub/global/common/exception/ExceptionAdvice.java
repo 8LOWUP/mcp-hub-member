@@ -45,15 +45,6 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
     }
 
     /*
-     * 올바르지 않은 방식으로 Json 요청을 보낼 경우에 대한 예외 처리
-     * enum 값 오류 등
-     */
-    @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<BaseResponse<String>> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
-        return handleExceptionHttpMessage(GlobalErrorStatus._REQUEST_FORMAT_ERROR.getCode());
-    }
-
-    /*
      * ConstraintViolationException 발생 시 예외 처리
      * 메서드 파라미터, 또는 메서드 리턴 값에 문제가 있을 경우, @Validated 검증 실패한 경우
      */

@@ -21,18 +21,18 @@ public class MemberDslRepositoryImpl implements MemberDslRepository {
     @Override
     public boolean existById(Long memberId) {
         return jpaQueryFactory
-            .selectFrom(qMember)
-            .where(qMember.id.eq(memberId))
-            .fetchFirst() != null;
+                .selectFrom(qMember)
+                .where(qMember.id.eq(memberId))
+                .fetchFirst() != null;
     }
 
     @Override
     public Optional<Member> findByIdNotFetchLoginInfo(Long memberId) {
         return Optional.ofNullable(
-            jpaQueryFactory
-                .selectFrom(qMember)
-                .where(qMember.id.eq(memberId))
-                .fetchFirst()
+                jpaQueryFactory
+                        .selectFrom(qMember)
+                        .where(qMember.id.eq(memberId))
+                        .fetchFirst()
         );
     }
 }

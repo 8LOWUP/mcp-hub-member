@@ -15,11 +15,11 @@ public class MemberRedisRepositoryImpl implements MemberRedisRepository {
 
     private final RedisTemplate<String, String> redisTemplate;
 
-    private static final long REFRESH_EXPIRATION_TIME = 60*60*24*14;
+    private static final long REFRESH_EXPIRATION_TIME = 60 * 60 * 24 * 14;
 
     // refresh token을 key로 저장 (rotation 시 유리)
     @Override
-    public void save(Long memberId,String refreshToken) {
+    public void save(Long memberId, String refreshToken) {
         redisTemplate.opsForValue().set("refresh:" + refreshToken, memberId.toString(), REFRESH_EXPIRATION_TIME, TimeUnit.SECONDS);
     }
 

@@ -10,7 +10,7 @@ public class MemberMapper {
 
     /**
      *
-     * @param centralPosition 총괄/부총괄/... etc(중앙 직책)
+     * @param centralPosition    총괄/부총괄/... etc(중앙 직책)
      * @param universityPosition 회장/부회장/~파트장/... etc(교내 운영진 직책)
      * @return Role (권한)
      */
@@ -30,7 +30,7 @@ public class MemberMapper {
         if (universityPosition != null && universityPosition.equals("회장") || universityPosition.equals("부회장")) {
             return "SCHOOL_ADMIN";
         }
-        if(universityPosition != null) {
+        if (universityPosition != null) {
             return "UNIVERSITY_STAFF";
         }
         return "CHALLENGER";

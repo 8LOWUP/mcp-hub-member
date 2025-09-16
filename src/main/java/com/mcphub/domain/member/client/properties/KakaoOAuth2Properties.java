@@ -11,10 +11,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class KakaoOAuth2Properties {
-	private String clientId;
-	private String redirectUri;
-	private String authorizationUri;
-	private String tokenUri;
-	private String userInfoUri;
+    private String clientId;
+    private String redirectUri;
+    private String authorizationUri;
+    private String tokenUri;
+    private String userInfoUri;
 }
 

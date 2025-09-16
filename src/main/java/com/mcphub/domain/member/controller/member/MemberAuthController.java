@@ -54,7 +54,6 @@ public class MemberAuthController {
     }
 
 
-
     //
     // @Operation(summary = "로그아웃 API", description = "해당 유저의 refreshToken을 삭제하는 API입니다.")
     // @DeleteMapping("/logout")

@@ -8,6 +8,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -80,6 +81,12 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
         return handleExceptionInternalArgs(GlobalErrorStatus._VALIDATION_ERROR.getCode(), errors);
 
+    }
+
+    private ResponseEntity<BaseResponse<String>> handleExceptionHttpMessage(BaseCodeDto errorCode) {
+        return ResponseEntity
+                .status(errorCode.getHttpStatus().value())
+                .body(BaseResponse.onFailure(errorCode.getCode(), errorCode.getMessage(), null));
     }
 
     private ResponseEntity<BaseResponse<String>> handleExceptionInternal(BaseCodeDto errorCode) {

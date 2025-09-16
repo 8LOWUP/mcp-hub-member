@@ -17,7 +17,7 @@ public enum MemberErrorStatus implements BaseCodeInterface {
     DB_SAVE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "REGISTER001", "DB 저장중 문제 발생. RollBack 됩니다."),
 
 
-            ;
+    ;
 
     private final HttpStatus httpStatus;
     private final boolean isSuccess = false;

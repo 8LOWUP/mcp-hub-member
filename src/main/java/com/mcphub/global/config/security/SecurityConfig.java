@@ -1,5 +1,6 @@
 package com.mcphub.global.config.security;
 
+import com.mcphub.global.ratelimit.RateLimitFilter;
 import org.springframework.http.MediaType;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -32,6 +33,11 @@ public class SecurityConfig {
     private final MemberService memberService;
     private final CustomAccessDeniedHandler customAccessDeniedHandler;
 
+    private final RateLimitFilter rateLimitFilter;
+/*
+    private final PrincipalDetailsService principalDetailsService;
+*/
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -53,6 +59,7 @@ public class SecurityConfig {
                                 .authenticationEntryPoint(authenticationEntryPoint()))
                 .addFilterBefore(new JwtExceptionFilter(), LogoutFilter.class) // filter 등록시 등록되어있는 필터와 순서를 정의해야함
                 .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(rateLimitFilter, UsernamePasswordAuthenticationFilter.class) // RateLimitFilter를 JwtAuthenticationFilter 뒤에 추가
                 .build();
     }
 

@@ -14,12 +14,12 @@ public class FileService {
 
     // todo : 파일 메타데이터 파일 엔티티에 저장 필요
 
-    public FileCreateResponse createFile(String domain , final MultipartFile file) {
+    public FileCreateResponse createFile(String domain, final MultipartFile file) {
         String imageUrl = s3FileUtil.uploadFile(domain, file);
         return new FileCreateResponse(imageUrl);
     }
 
-    public FileCreateResponse createPresignedUrl(String domain , String fileName) {
+    public FileCreateResponse createPresignedUrl(String domain, String fileName) {
         String presignedUrl = s3FileUtil.getPresignedUrl(domain, fileName);
         return new FileCreateResponse(presignedUrl);
     }

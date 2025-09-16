@@ -6,4 +6,6 @@ public interface McpTokenService {
 	Long saveMcpToken(Long userId, Long mcpId, McpTokenRequest request);
 
 	Long updateMcpToken(Long userId, Long mcpId, McpTokenRequest request);
+
+	Long deleteMcpToken(Long userId, Long mcpId);
 }

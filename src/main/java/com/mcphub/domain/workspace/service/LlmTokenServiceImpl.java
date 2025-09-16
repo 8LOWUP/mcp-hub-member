@@ -10,19 +10,29 @@ import com.mcphub.domain.workspace.status.LlmErrorStatus;
 import com.mcphub.global.common.exception.RestApiException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.jasypt.encryption.StringEncryptor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class LlmTokenServiceImpl implements LlmTokenService {
     private final LlmTokenJapRepository llmTokenJapRepository;
     private final LlmTokenDslRepository llmTokenDslRepository;
+    private final StringEncryptor stringEncryptor;
 
     @Transactional
     public List<LlmToken> get(Long userId) {
-        return llmTokenJapRepository.findByUserId(userId);
+        List<LlmToken> llmTokenList = llmTokenJapRepository.findByUserId(userId);
+
+        return llmTokenList.stream()
+                .peek(llmToken -> {
+                    String decryptedToken = stringEncryptor.decrypt(llmToken.getToken());
+                    llmToken.setToken(decryptedToken);
+                })
+                .toList();
     }
 
     @Transactional
@@ -31,7 +41,9 @@ public class LlmTokenServiceImpl implements LlmTokenService {
         if (llmTokenDslRepository.existsByUserIdAndLlmId(cmd.userId(), cmd.llmId()))
             throw new RestApiException(LlmErrorStatus.TOKEN_ALREADY_EXISTS);
 
-        return llmTokenJapRepository.save(new LlmToken(null, cmd.userId(), cmd.llmId(), cmd.llmToken()));
+        String encryptedToken = stringEncryptor.encrypt(cmd.llmToken());
+
+        return llmTokenJapRepository.save(new LlmToken(null, cmd.userId(), cmd.llmId(), encryptedToken));
     }
 
     @Transactional
@@ -42,7 +54,8 @@ public class LlmTokenServiceImpl implements LlmTokenService {
 
         //DB 업데이트
         LlmToken llmToken = llmTokenDslRepository.findByUserIdANdLlmId(cmd.userId(), cmd.llmId());
-        llmToken.setToken(cmd.llmToken());
+        String encryptedToken = stringEncryptor.encrypt(cmd.llmToken());
+        llmToken.setToken(encryptedToken);
 
         return llmToken;
     }

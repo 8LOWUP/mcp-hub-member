@@ -78,6 +78,8 @@ dependencies {
 
 	//Anthropic
 	implementation 'com.anthropic:anthropic-java:2.6.0'
+
+	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
 }
 
 tasks.named('test') {

@@ -5,7 +5,6 @@ import lombok.Builder;
 
 @Builder
 public record LlmTokenSaveResponse (
-    Llm llmId,
-    String llmToken
+    Llm llmId
 ) {
 }

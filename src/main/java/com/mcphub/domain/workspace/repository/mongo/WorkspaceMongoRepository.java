@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-public interface WorkspaceMongoRepository extends MongoRepository<Workspace, Long> {
+public interface WorkspaceMongoRepository extends MongoRepository<Workspace, String> {
 
     Optional<Workspace> findTopByUserIdAndDeletedAtOrderByCreatedAtDesc(String userId, LocalDateTime deletedAt);
 

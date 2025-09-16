@@ -20,28 +20,31 @@ public enum GlobalErrorStatus implements BaseCodeInterface {
     _REQUEST_FORMAT_ERROR(HttpStatus.BAD_REQUEST, "COMMON406", "요청 본문 형식이 올바르지 않습니다. Enum 값이나 다른 데이터 형식을 확인해주세요."),
     _INTERNAL_PAGE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON500", "페이지 에러, 0 이상의 페이지를 입력해주세요"),
 
-    // S3 관련 에러
-    _S3_UPLOAD_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "S3_5001", "파일 업로드에 실패했습니다."),
-    _S3_DELETE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "S3_5002", "파일 삭제에 실패했습니다."),
-    _FAILED_NOT_VALID_FORMAT(HttpStatus.BAD_REQUEST, "FILE001","지원하지 않는 파일 확장자입니다."),
-    _FAILED_READ_FILE(HttpStatus.BAD_REQUEST, "FILE002","파일을 읽는 중 문제가 발생하였습니다."),
+	// S3 관련 에러
+	_S3_UPLOAD_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "S3_5001", "파일 업로드에 실패했습니다."),
+	_S3_DELETE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "S3_5002", "파일 삭제에 실패했습니다."),
+	_FAILED_NOT_VALID_FORMAT(HttpStatus.BAD_REQUEST, "FILE001", "지원하지 않는 파일 확장자입니다."),
+	_FAILED_READ_FILE(HttpStatus.BAD_REQUEST, "FILE002", "파일을 읽는 중 문제가 발생하였습니다."),
 
-    // For test
-    TEMP_EXCEPTION(HttpStatus.BAD_REQUEST, "TEMP4001", "예외처리 테스트입니다."),
-    ;
+	//MCP 관련 에러
+	_ALREADY_SAVED_MCP(HttpStatus.CONFLICT, "MCP409", "이미 저장된 MCP입니다."),
 
-    private final HttpStatus httpStatus;
-    private final boolean isSuccess = false;
-    private final String code;
-    private final String message;
+	// For test
+	TEMP_EXCEPTION(HttpStatus.BAD_REQUEST, "TEMP4001", "예외처리 테스트입니다."),
+	;
 
-    @Override
-    public BaseCodeDto getCode() {
-        return BaseCodeDto.builder()
-                .httpStatus(httpStatus)
-                .isSuccess(isSuccess)
-                .code(code)
-                .message(message)
-                .build();
-    }
+	private final HttpStatus httpStatus;
+	private final boolean isSuccess = false;
+	private final String code;
+	private final String message;
+
+	@Override
+	public BaseCodeDto getCode() {
+		return BaseCodeDto.builder()
+		                  .httpStatus(httpStatus)
+		                  .isSuccess(isSuccess)
+		                  .code(code)
+		                  .message(message)
+		                  .build();
+	}
 }

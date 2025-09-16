@@ -1,6 +1,7 @@
 package com.mcphub.global.config;
 
 import io.lettuce.core.ClientOptions;
+import io.lettuce.core.RedisClient;
 import io.lettuce.core.SocketOptions;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -44,5 +45,11 @@ public class RedisDevConfig {
 
 
         return redisTemplate;
+    }
+
+    @Bean
+    public RedisClient redisClient() {
+        String redisUrl = String.format("redis://%s:%d", host, port);
+        return RedisClient.create(redisUrl);
     }
 }

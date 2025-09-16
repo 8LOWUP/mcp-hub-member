@@ -12,9 +12,8 @@ import lombok.Setter;
 @Setter
 public class KakaoOAuth2Properties {
     private String clientId;
+    private String clientSecret;
     private String redirectUri;
     private String authorizationUri;
-    private String tokenUri;
-    private String userInfoUri;
 }
 

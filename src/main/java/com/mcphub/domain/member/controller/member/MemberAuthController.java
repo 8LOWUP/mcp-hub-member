@@ -21,7 +21,7 @@ public class MemberAuthController {
 
     private final MemberAuthAdviser memberAuthAdviser;
 
-    @Operation(summary = "소셜 카카오 로그인 API", description = "카카오 로그인을 수행하는 API입니다.")
+    @Operation(summary = "카카오 소셜 로그인 API", description = "카카오 로그인을 수행하는 API입니다.")
     @ApiResponses({
             @ApiResponse(
                     responseCode = "200",
@@ -37,6 +37,21 @@ public class MemberAuthController {
         return BaseResponse.onSuccess(memberAuthAdviser.kakaoLogin(code));
     }
 
+    @Operation(summary = "구글 소셜 로그인 API", description = "구글 로그인을 수행하는 API입니다.")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "구글 소셜 로그인 성공"
+            )
+    })
+    @Parameters({
+            @Parameter(name = "code", description = "인증 코드를 받아옵니다."),
+    })
+    @GetMapping("/social/google")
+    public BaseResponse<SocialLoginResponse> googleLogin(
+            @RequestParam String code) {
+        return BaseResponse.onSuccess(memberAuthAdviser.googleLogin(code));
+    }
 
     @Operation(summary = "accessToken, refreshToken 재발급 API", description = "refreshToken가 유효하다면 새로운 accessToken을 발급하는 API입니다.")
     @ApiResponses({

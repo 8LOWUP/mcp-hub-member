@@ -38,9 +38,15 @@ public class MemberAuthAdviser {
         return responseConverter.toSocialLoginResponse(token, member);
     }
 
+    public SocialLoginResponse googleLogin(String code) {
+        
+    }
+
     public SocialLoginResponse regenerateToken(String refreshToken) {
         TokenInfo tokenInfo = memberCommandPort.reissueAccessToken(refreshToken);
         return responseConverter.toRegenerateTokenResponse(tokenInfo);
     }
+
+
 }
 

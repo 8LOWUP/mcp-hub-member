@@ -11,8 +11,7 @@ import org.springframework.stereotype.Component;
 @Setter
 public class GoogleOAuth2Properties {
     private String clientId;
+    private String clientSecret;
     private String redirectUri;
-    private String authorizationUri;
-    private String tokenUri;
     private String grantType;
 }

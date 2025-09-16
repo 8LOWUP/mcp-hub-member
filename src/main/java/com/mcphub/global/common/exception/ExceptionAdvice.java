@@ -8,6 +8,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
@@ -41,6 +42,15 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
         e.printStackTrace(); //예외 정보 출력
 
         return handleExceptionInternalFalse(GlobalErrorStatus._INTERNAL_SERVER_ERROR.getCode(), e.getMessage());
+    }
+
+    /*
+     * 올바르지 않은 방식으로 Json 요청을 보낼 경우에 대한 예외 처리
+     * enum 값 오류 등
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<BaseResponse<String>> handleHttpMessageNotReadableException(HttpMessageNotReadableException e) {
+        return handleExceptionHttpMessage(GlobalErrorStatus._REQUEST_FORMAT_ERROR.getCode());
     }
 
     /*
@@ -80,6 +90,12 @@ public class ExceptionAdvice extends ResponseEntityExceptionHandler {
 
         return handleExceptionInternalArgs(GlobalErrorStatus._VALIDATION_ERROR.getCode(), errors);
 
+    }
+
+    private ResponseEntity<BaseResponse<String>> handleExceptionHttpMessage(BaseCodeDto errorCode) {
+        return ResponseEntity
+                .status(errorCode.getHttpStatus().value())
+                .body(BaseResponse.onFailure(errorCode.getCode(), errorCode.getMessage(), null));
     }
 
     private ResponseEntity<BaseResponse<String>> handleExceptionInternal(BaseCodeDto errorCode) {

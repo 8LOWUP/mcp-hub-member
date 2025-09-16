@@ -2,9 +2,8 @@ package com.mcphub.domain.mcp.converter;
 
 import com.mcphub.domain.mcp.dto.response.api.McpDetailResponse;
 import com.mcphub.domain.mcp.dto.response.api.McpResponse;
-import com.mcphub.domain.mcp.dto.response.api.MyUploadMcpResponse;
+import com.mcphub.domain.mcp.dto.response.api.MySavedMcpResponse;
 import com.mcphub.domain.mcp.dto.response.readmodel.McpReadModel;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Component;
 import com.mcphub.domain.mcp.dto.response.api.TestResponse;
 
@@ -51,16 +50,16 @@ public class McpConverter {
 		                        .build();
 	}
 
-	public MyUploadMcpResponse toMyUploadMcpResponse(McpReadModel m) {
-		return MyUploadMcpResponse.builder()
-		                          .id(m.getId())
-		                          .name(m.getName())
-		                          .version(m.getVersion())
-		                          .description(m.getDescription())
-		                          .imageUrl(m.getImageUrl())
-		                          .categoryName(m.getCategoryName())
-		                          .platformName(m.getPlatformName())
-		                          .licenseName(m.getLicenseName())
-		                          .build();
+	public MySavedMcpResponse toMyUploadMcpResponse(McpReadModel m) {
+		return MySavedMcpResponse.builder()
+		                         .id(m.getId())
+		                         .name(m.getName())
+		                         .version(m.getVersion())
+		                         .description(m.getDescription())
+		                         .imageUrl(m.getImageUrl())
+		                         .categoryName(m.getCategoryName())
+		                         .platformName(m.getPlatformName())
+		                         .licenseName(m.getLicenseName())
+		                         .build();
 	}
 }

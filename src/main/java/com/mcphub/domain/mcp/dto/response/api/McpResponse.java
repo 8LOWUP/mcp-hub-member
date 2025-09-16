@@ -26,10 +26,10 @@ public class McpResponse {
 	private String licenseName;
 
 	// 리뷰 관련
-	private Float averageRating;
+	private Double averageRating;
 
 	// 저장 관련
-	private Integer savedUserCount;
+	private Long savedUserCount;
 
 	// 최초 등록일
 	private LocalDateTime publishedDate;

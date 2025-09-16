@@ -26,13 +26,13 @@ public class McpDetailResponse {
 	private String platformName;
 	private String licenseName;
 
-	private Float averageRating;
-	private Integer savedUserCount;
+	private Double averageRating;
+	private Long savedUserCount;
 
 	private List<McpToolResponse> tools;
 
 	//최근 Mcp 업데이트 된 날
-	private LocalDate RecentUpdateDate;
+	private LocalDate publishDate;
 	// 첫 배포 등록일
-	private LocalDate publishedDate;
+	private LocalDate lastPublishDate;
 }

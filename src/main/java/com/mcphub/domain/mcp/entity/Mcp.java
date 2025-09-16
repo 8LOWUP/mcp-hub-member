@@ -17,6 +17,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import com.mcphub.global.common.base.BaseEntity;
+import org.hibernate.annotations.Where;
 
 import java.time.LocalDateTime;
 
@@ -27,6 +28,8 @@ import java.time.LocalDateTime;
 @Builder
 @Entity
 @Table(name = "mcp")
+// TODO : 우선 SOFT DELETE 진행 , 추후 adminMcp 레포지토리를 따로 빼서 삭제 관리할지 확인 여부 필요
+@Where(clause = "deleted_at is null")
 public class Mcp extends BaseEntity {
 
 	@Id
@@ -73,10 +76,10 @@ public class Mcp extends BaseEntity {
 	private Boolean isPublished;
 
 	// 최초 publsh한 날짜
-	@Column(name = "publishedAt", nullable = true)
+	@Column(name = "published_at", nullable = true)
 	private LocalDateTime publishedAt;
 
 	// 최종 publish 날짜
-	@Column(name = "lastPublishAt", nullable = true)
+	@Column(name = "last_publish_at", nullable = true)
 	private LocalDateTime lastPublishAt;
 }

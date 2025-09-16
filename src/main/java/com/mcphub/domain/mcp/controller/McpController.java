@@ -2,7 +2,7 @@ package com.mcphub.domain.mcp.controller;
 
 import com.mcphub.domain.mcp.dto.request.MyUploadMcpRequest;
 import com.mcphub.domain.mcp.dto.response.api.McpDetailResponse;
-import com.mcphub.domain.mcp.dto.response.api.MyUploadMcpResponse;
+import com.mcphub.domain.mcp.dto.response.api.MySavedMcpResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,17 +13,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import com.mcphub.domain.mcp.adviser.McpAdviser;
 import com.mcphub.domain.mcp.dto.request.McpListRequest;
-import com.mcphub.domain.mcp.dto.request.McpPurchaseRequest;
-import com.mcphub.domain.mcp.dto.response.api.TestResponse;
 import com.mcphub.global.common.base.BaseResponse;
 import com.mcphub.domain.mcp.dto.response.api.McpResponse;
-
-import java.util.List;
 
 /**
  * MCP 컨트롤러
@@ -37,7 +32,7 @@ import java.util.List;
 @RequestMapping("/mcps")
 @RequiredArgsConstructor
 public class McpController {
-	McpAdviser mcpAdviser;
+	private final McpAdviser mcpAdviser;
 
 	/**
 	 * 마켓 -> MCP 리스트
@@ -77,6 +72,8 @@ public class McpController {
 		return BaseResponse.onSuccess(saveId);
 	}
 
+	//TODO : 소프트 삭제? 하드 삭제? 여부 정해야함
+
 	/**
 	 * 구매한 MCP 삭제
 	 * @param mcpId MCP ID
@@ -93,13 +90,13 @@ public class McpController {
 	 * @return 등록한 MCP 리스트
 	 */
 	@GetMapping("/me")
-	public BaseResponse<Page<MyUploadMcpResponse>> getMyUploadMcpList(@ModelAttribute MyUploadMcpRequest request) {
+	public BaseResponse<Page<MySavedMcpResponse>> getMySavedMcpList(@ModelAttribute MyUploadMcpRequest request) {
 		Pageable pageable = PageRequest.of(
 			request.getPage(),
 			request.getSize(),
 			Sort.by(Sort.Direction.DESC, "id")
 		);
 
-		return BaseResponse.onSuccess(mcpAdviser.getMyUploadMcpList(pageable, request));
+		return BaseResponse.onSuccess(mcpAdviser.getMySavedMcpList(pageable, request));
 	}
 }

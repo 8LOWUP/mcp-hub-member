@@ -12,23 +12,14 @@ import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface McpService {
-	Mcp addMcp();
-
-	TestReadDto getMcpById(Long id);
-
-	List<Mcp> getAllMcps();
-
-	void deleteMcpById(Long id);
-
-	Mcp updateMcp();
 
 	McpReadModel getMcpDetail(Long id);
 
 	Page<McpReadModel> getMcpList(Pageable pageable, McpListRequest request);
 
-	Long saveUserMcp(Long mcpId);
+	Long saveUserMcp(Long userId, Long mcpId);
 
-	Long deleteMcp(Long mcpId);
+	Long deleteMcp(Long userId, Long mcpId);
 
-	Page<McpReadModel> getMyUploadMcpList(Long userId, Pageable pageable, MyUploadMcpRequest request);
+	Page<McpReadModel> getMySavedMcpList(Long userId, Pageable pageable, MyUploadMcpRequest request);
 }

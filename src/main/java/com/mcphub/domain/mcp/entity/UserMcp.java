@@ -25,19 +25,17 @@ import lombok.Setter;
 @Table(name = "user_mcp")
 public class UserMcp extends BaseEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 
-    // 사용자 테이블이 별도라면 Long으로 들고가고, 엔티티가 있다면 @ManyToOne으로 교체하세요.
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+	@Column(name = "user_id", nullable = false)
+	private Long userId;
 
-    // FK(mcp_id)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "mcp_id", nullable = false)
-    private Mcp mcp;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "mcp_id", nullable = false)
+	private Mcp mcp;
 
-    @Column(name = "mcp_token", nullable = false, columnDefinition = "TEXT")
-    private String mcpToken;
+	@Column(name = "mcp_token", nullable = true, columnDefinition = "TEXT")
+	private String mcpToken;
 }

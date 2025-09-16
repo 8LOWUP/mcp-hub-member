@@ -1,4 +1,4 @@
-package com.mcphub.domain.mcp.repository;
+package com.mcphub.domain.mcp.repository.jsp;
 
 import com.mcphub.domain.mcp.entity.McpReview;
 import org.springframework.data.jpa.repository.JpaRepository;

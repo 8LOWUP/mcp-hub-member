@@ -2,7 +2,14 @@ package com.mcphub.domain.mcp.service.mcp;
 
 import com.mcphub.domain.mcp.dto.request.McpListRequest;
 import com.mcphub.domain.mcp.dto.request.MyUploadMcpRequest;
+import com.mcphub.domain.mcp.dto.response.api.McpToolResponse;
 import com.mcphub.domain.mcp.dto.response.readmodel.McpReadModel;
+import com.mcphub.domain.mcp.entity.UserMcp;
+import com.mcphub.domain.mcp.repository.jsp.McpReviewRepository;
+import com.mcphub.domain.mcp.repository.jsp.UserMcpRepository;
+import com.mcphub.domain.mcp.repository.querydsl.McpDslRepository;
+import com.mcphub.global.common.exception.RestApiException;
+import com.mcphub.global.common.exception.code.status.GlobalErrorStatus;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -11,8 +18,9 @@ import org.springframework.stereotype.Service;
 import com.mcphub.domain.mcp.dto.response.readmodel.TestReadDto;
 import com.mcphub.domain.mcp.entity.Mcp;
 import com.mcphub.domain.mcp.mapper.McpMapper;
-import com.mcphub.domain.mcp.repository.McpRepository;
+import com.mcphub.domain.mcp.repository.jsp.McpRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -21,90 +29,81 @@ public class McpServiceImpl implements McpService {
 
 	private final McpMapper mcpMapper;
 	private final McpRepository mcpRepository;
+	private final McpReviewRepository mcpReviewRepository;
+	private final UserMcpRepository userMcpRepository;
+	private final McpDslRepository mcpDslRepository;
 
 	@Override
-	public Mcp addMcp() {
-		return null;
-	}
-
-	@Override
-	public TestReadDto getMcpById(Long id) {
-		Mcp mcp = mcpRepository.findById(id).orElse(null);
-		return mcpMapper.testMapper(mcp);
-	}
-
-	@Override
-	public List<Mcp> getAllMcps() {
-		return null;
-	}
-
-	@Override
-	public void deleteMcpById(Long id) {
-
-	}
-
-	@Override
-	public Mcp updateMcp() {
-		return null;
-	}
-
-	;
-
-	@Override
+	@Transactional(readOnly = true)
 	public McpReadModel getMcpDetail(Long id) {
-		return null;
+		McpReadModel rm = mcpDslRepository.getMcpDetail(id);
+		if (rm == null) {
+			throw new RestApiException(GlobalErrorStatus._NOT_FOUND);
+		}
+		List<McpToolResponse> tools = mcpDslRepository.getMcpTools(id);
+		rm.setTools(tools);
+		return rm;
 	}
 
 	@Override
 	@Transactional(readOnly = true)
 	public Page<McpReadModel> getMcpList(Pageable pageable, McpListRequest req) {
-		// 검색/필터/정렬은 추후 Specification/QueryDSL로 확장
-		Page<Mcp> mcps = mcpRepository.findAll(pageable);
+		return mcpDslRepository.searchMcps(req, pageable);
+	}
 
-		return mcps.map(mcp -> {
-			// 리뷰 평균/저장 수 계산
-			Float avgRating = mcpReviewRepository.getAverageRating(mcp.getId());
-			Integer savedUserCount = userMcpRepository.getSavedUserCount(mcp.getId());
+	@Override
+	@Transactional
+	public Long saveUserMcp(Long userId, Long mcpId) {
+		boolean exists = userMcpRepository.existsByUserIdAndMcpId(userId, mcpId);
+		if (exists) {
+			throw new RestApiException(GlobalErrorStatus._ALREADY_SAVED_MCP);
+		}
 
+		Mcp mcp = mcpRepository.findById(mcpId)
+		                       .orElseThrow(() -> new RestApiException(GlobalErrorStatus._NOT_FOUND));
+
+		if (!mcp.getIsPublished()) {
+			throw new RestApiException(GlobalErrorStatus._VALIDATION_ERROR);
+		}
+		UserMcp newUserMcp = UserMcp.builder()
+		                            .userId(userId)
+		                            .mcp(mcp)
+		                            .build();
+
+		return userMcpRepository.save(newUserMcp).getId();
+	}
+
+	// 구매한 Mcp삭제
+	@Override
+	@Transactional
+	public Long deleteMcp(Long userId, Long mcpId) {
+		Mcp mcp = mcpRepository.findById(mcpId)
+		                       .orElseThrow(() -> new RestApiException(GlobalErrorStatus._NOT_FOUND));
+		userMcpRepository.deleteByUserIdAndMcp(userId, mcp);
+		return mcp.getId();
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public Page<McpReadModel> getMySavedMcpList(Long userId, Pageable pageable, MyUploadMcpRequest request) {
+
+		Page<UserMcp> userMcpPage = userMcpRepository.findByUserId(userId, pageable);
+
+		return userMcpPage.map(userMcp -> {
+			Mcp mcp = userMcp.getMcp();
 			return McpReadModel.builder()
 			                   .id(mcp.getId())
 			                   .name(mcp.getName())
 			                   .version(mcp.getVersion())
 			                   .description(mcp.getDescription())
 			                   .imageUrl(mcp.getImageUrl())
-			                   .sourceUrl(mcp.getSourceUrl())
-			                   .isKeyRequired(mcp.getIsKeyRequired())
-
-			                   .categoryId(mcp.getCategory().getId())
 			                   .categoryName(mcp.getCategory().getName())
-			                   .platformId(mcp.getPlatform().getId())
 			                   .platformName(mcp.getPlatform().getName())
-			                   .licenseId(mcp.getLicense().getId())
 			                   .licenseName(mcp.getLicense().getName())
-
-			                   .averageRating(avgRating)
-			                   .savedUserCount(savedUserCount)
-			                   .isPublished(mcp.getIsPublished())
-			                   .publishedAt(mcp.getPublishedAt())
-			                   .createdAt(mcp.getCreatedAt())
-			                   .updatedAt(mcp.getUpdatedAt())
+			                   .createdAt(userMcp.getCreatedAt())
 			                   .build();
 		});
-	}
 
-	@Override
-	public Long saveUserMcp(Long mcpId) {
-		return null;
-	}
-
-	@Override
-	public Long deleteMcp(Long mcpId) {
-		return null;
-	}
-
-	@Override
-	public Page<McpReadModel> getMyUploadMcpList(Long userId, Pageable pageable, MyUploadMcpRequest request) {
-		return null;
 	}
 
 }

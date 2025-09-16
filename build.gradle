@@ -78,6 +78,17 @@ dependencies {
 
 	// Redis 기반의 Bucket4j 확장
 	implementation 'com.bucket4j:bucket4j-redis:8.7.1'
+
+	//google gemini
+	implementation 'com.google.genai:google-genai:1.15.0'
+
+	//OpenAI
+	implementation 'com.openai:openai-java:3.5.0'
+
+	//Anthropic
+	implementation 'com.anthropic:anthropic-java:2.6.0'
+
+	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
 }
 
 tasks.named('test') {

@@ -58,7 +58,7 @@ public class SecurityConfig {
                         exceptionHandling.accessDeniedHandler(customAccessDeniedHandler)
                                 .authenticationEntryPoint(authenticationEntryPoint()))
                 .addFilterBefore(new JwtExceptionFilter(), LogoutFilter.class) // filter 등록시 등록되어있는 필터와 순서를 정의해야함
-                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider, memberService), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new JwtAuthenticationFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(rateLimitFilter, UsernamePasswordAuthenticationFilter.class) // RateLimitFilter를 JwtAuthenticationFilter 뒤에 추가
                 .build();
     }

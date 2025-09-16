@@ -1,5 +1,7 @@
 package com.mcphub.domain.member.adviser.member;
 
+import com.mcphub.domain.member.client.GoogleOAuth2Client;
+import com.mcphub.domain.member.dto.response.readmodel.GoogleProfile;
 import org.springframework.stereotype.Component;
 
 import com.mcphub.domain.member.client.KakaoOAuth2Client;
@@ -22,6 +24,7 @@ public class MemberAuthAdviser {
     private final JwtProvider jwtProvider;
     private final MemberResponseConverter responseConverter;
     private final KakaoOAuth2Client kakaoClient;
+    private final GoogleOAuth2Client googleClient;
     private final MemberRedisRepositoryImpl redisRepository;
 
     public SocialLoginResponse kakaoLogin(String code) {
@@ -38,9 +41,24 @@ public class MemberAuthAdviser {
         return responseConverter.toSocialLoginResponse(token, member);
     }
 
+    public SocialLoginResponse googleLogin(String code) {
+        GoogleProfile profile = googleClient.getProfile(code);
+        MemberRM member = memberCommandPort.saveOrUpdate(
+                profile.getEmail(), profile.getName()
+        );
+
+        TokenInfo token = jwtProvider.generateToken(member.id().toString());
+
+        redisRepository.save(member.id(), token.refreshToken());
+
+        return responseConverter.toSocialLoginResponse(token, member);
+    }
+
     public SocialLoginResponse regenerateToken(String refreshToken) {
         TokenInfo tokenInfo = memberCommandPort.reissueAccessToken(refreshToken);
         return responseConverter.toRegenerateTokenResponse(tokenInfo);
     }
+
+
 }
 

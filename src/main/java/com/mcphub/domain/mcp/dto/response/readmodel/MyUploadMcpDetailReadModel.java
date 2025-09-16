@@ -5,11 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,9 +31,11 @@ public class MyUploadMcpDetailReadModel {
 	private Long licenseId;
 	private String licenseName;
 
-	private Float averageRating;     // null 가능
-	private Integer savedUserCount;
+	private double averageRating;     // null 가능
+	private Long savedUserCount;
 	private boolean isPublished;
+	private LocalDateTime publishedAt;
+	private LocalDateTime lastPublishedAt;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 	private List<McpToolResponse> tools;

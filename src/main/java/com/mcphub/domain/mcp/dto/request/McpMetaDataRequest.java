@@ -21,8 +21,6 @@ public class McpMetaDataRequest {
 	private Long categoryId;
 	private Long platformId;
 	private Long licenseId;
-	private String requestUrl;
 	private String sourceUrl;
-	private Boolean isPublished;
 	private List<McpToolRequest> tools;
 }

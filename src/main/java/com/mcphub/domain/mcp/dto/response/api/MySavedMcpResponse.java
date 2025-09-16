@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MyUploadMcpResponse {
+public class MySavedMcpResponse {
 	private Long id;
 	private String name;
 	private String version;
@@ -20,6 +20,5 @@ public class MyUploadMcpResponse {
 	private String categoryName;
 	private String platformName;
 	private String licenseName;
-	private LocalDateTime updatedAt;
 	private LocalDateTime createdAt;
 }

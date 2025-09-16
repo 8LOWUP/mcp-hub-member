@@ -1,14 +1,21 @@
 package com.mcphub.domain.mcp.controller;
 
 import com.mcphub.domain.mcp.adviser.McpDashboardAdviser;
+import com.mcphub.domain.mcp.dto.request.McpListRequest;
 import com.mcphub.domain.mcp.dto.response.api.CategoryResponse;
 import com.mcphub.domain.mcp.dto.response.api.LicenseResponse;
+import com.mcphub.domain.mcp.dto.response.api.McpResponse;
 import com.mcphub.domain.mcp.dto.response.api.MyUploadMcpDetailResponse;
 import com.mcphub.domain.mcp.dto.response.api.PlatformResponse;
 import com.mcphub.domain.mcp.service.mcpDashboard.McpDashboardService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +34,19 @@ import com.mcphub.global.common.base.BaseResponse;
 public class McpDashboardController {
 
 	private final McpDashboardAdviser mcpDashboardAdviser;
+
+	@GetMapping()
+	public BaseResponse<Page<McpResponse>> getMyUploadMcpList(@ModelAttribute McpListRequest request) {
+		Pageable pageable = PageRequest.of(
+			request.getPage(),
+			Math.min(request.getSize(), 50),
+			Sort.by(Sort.Direction.DESC, "id")
+		);
+
+		return BaseResponse.onSuccess(
+			mcpDashboardAdviser.getMyUploadMcpList(pageable, request)
+		);
+	}
 
 	/**
 	 * 업로드한 Mcp 상세
@@ -88,7 +108,7 @@ public class McpDashboardController {
 	 */
 	@PatchMapping("/{mcpId}/publish")
 	public BaseResponse<Long> publishMcp(@PathVariable Long mcpId, @RequestBody McpPublishRequest request) {
-		Long publishedMcpId = mcpDashboardAdviser.publishMcp(mcpId);
+		Long publishedMcpId = mcpDashboardAdviser.publishMcp(mcpId, request);
 		return BaseResponse.onSuccess(publishedMcpId);
 	}
 

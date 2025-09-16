@@ -59,7 +59,7 @@ public class McpServiceImpl implements McpService {
 			throw new RestApiException(GlobalErrorStatus._ALREADY_SAVED_MCP);
 		}
 
-		Mcp mcp = mcpRepository.findById(mcpId)
+		Mcp mcp = mcpRepository.findByIdAndDeletedAtIsNull(mcpId)
 		                       .orElseThrow(() -> new RestApiException(GlobalErrorStatus._NOT_FOUND));
 
 		if (!mcp.getIsPublished()) {

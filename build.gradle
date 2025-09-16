@@ -27,7 +27,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
@@ -76,7 +76,7 @@ dependencies {
 	implementation 'com.jayway.jsonpath:json-path:2.6.0'
 	implementation 'com.auth0:java-jwt:3.18.2'
 
-    // Bucket4j Core
+	// Bucket4j Core
 	implementation 'com.bucket4j:bucket4j-core:8.7.1'
 
 	// Redis 기반의 Bucket4j 확장

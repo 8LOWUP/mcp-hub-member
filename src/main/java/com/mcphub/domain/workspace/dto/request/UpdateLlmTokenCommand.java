@@ -7,6 +7,6 @@ import lombok.Builder;
 public record UpdateLlmTokenCommand(
         Llm llmId,
         String llmToken,
-        Long userId
+        String userId
 ) {
 }

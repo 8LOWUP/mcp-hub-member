@@ -8,7 +8,7 @@ import com.mcphub.domain.workspace.entity.LlmToken;
 import java.util.List;
 
 public interface LlmTokenService {
-    List<LlmToken> get(Long userId);
+    List<LlmToken> get(String userId);
     LlmToken create(CreateLlmTokenCommand cmd);
     LlmToken update(UpdateLlmTokenCommand cmd);
 }

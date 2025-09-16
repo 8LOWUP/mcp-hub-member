@@ -52,9 +52,9 @@ public class PrincipalDetails implements UserDetails {
         return true;
     }
 
-    // @Override
-    // public boolean isEnabled() {
-    //     return member.getDeletedAt() == null;
-    // }
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
 

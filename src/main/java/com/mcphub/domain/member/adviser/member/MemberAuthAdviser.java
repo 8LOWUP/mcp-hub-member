@@ -5,7 +5,6 @@ import com.mcphub.domain.member.client.GoogleOAuth2Client;
 import com.mcphub.domain.member.dto.response.readmodel.GithubProfile;
 import com.mcphub.domain.member.dto.response.readmodel.GoogleProfile;
 import com.mcphub.domain.member.service.auth.port.MemberQueryPort;
-import com.mcphub.global.util.SecurityUtils;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,7 +15,7 @@ import com.mcphub.domain.member.converter.response.MemberResponseConverter;
 import com.mcphub.domain.member.dto.response.api.SocialLoginResponse;
 import com.mcphub.domain.member.dto.response.readmodel.KakaoProfile;
 import com.mcphub.domain.member.dto.response.readmodel.MemberRM;
-import com.mcphub.domain.member.repository.redis.impl.MemberRedisRepositoryImpl;
+import com.mcphub.global.token.repository.redis.impl.RedisRepositoryImpl;
 import com.mcphub.domain.member.service.auth.port.MemberCommandPort;
 import com.mcphub.global.config.security.jwt.JwtProvider;
 import com.mcphub.global.config.security.jwt.TokenInfo;
@@ -35,7 +34,7 @@ public class MemberAuthAdviser {
     private final KakaoOAuth2Client kakaoClient;
     private final GoogleOAuth2Client googleClient;
     private final GithubOAuth2Client githubClient;
-    private final MemberRedisRepositoryImpl redisRepository;
+    private final RedisRepositoryImpl redisRepository;
     private final MemberQueryPort memberQueryPort;
 
     public SocialLoginResponse kakaoLogin(String code) {

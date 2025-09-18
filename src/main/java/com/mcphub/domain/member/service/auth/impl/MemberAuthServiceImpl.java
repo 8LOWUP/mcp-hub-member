@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.mcphub.domain.member.dto.response.readmodel.MemberRM;
 import com.mcphub.domain.member.entity.Member;
 import com.mcphub.domain.member.repository.Jpa.MemberRepository;
-import com.mcphub.domain.member.repository.redis.MemberRedisRepository;
+import com.mcphub.global.token.repository.redis.RedisRepository;
 import com.mcphub.domain.member.service.auth.port.MemberCommandPort;
 import com.mcphub.domain.member.service.auth.port.MemberQueryPort;
 import com.mcphub.global.common.exception.code.status.AuthErrorStatus;
@@ -27,7 +27,7 @@ public class MemberAuthServiceImpl implements MemberCommandPort, MemberQueryPort
 
     private final MemberRepository memberRepository;
     private final JwtProvider jwtProvider;
-    private final MemberRedisRepository redisRepository;
+    private final RedisRepository redisRepository;
 
     @Override
     @Transactional

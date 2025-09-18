@@ -87,22 +87,6 @@ public class MemberAuthController {
          return BaseResponse.onSuccess(memberAuthAdviser.logout(request, refreshToken));
      }
 
-    @Operation(summary = "회원 탈퇴 API", description = "해당 유저 정보를 삭제하는 API입니다.")
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "회원탈퇴 성공"
-            )
-    })
-    @Parameters({
-            @Parameter(name = "refreshToken", description = "로그인시 받는 refreshToken"),
-    })
-    @DeleteMapping
-    public BaseResponse<Boolean> withdrawal(
-            HttpServletRequest request,
-            @RequestParam String refreshToken
-    ) {
-        return BaseResponse.onSuccess(memberAuthAdviser.withdrawal(request, refreshToken));
-    }
+
 }
 

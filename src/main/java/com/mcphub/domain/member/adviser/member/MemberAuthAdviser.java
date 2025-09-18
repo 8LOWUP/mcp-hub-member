@@ -33,7 +33,6 @@ public class MemberAuthAdviser {
     private final KakaoOAuth2Client kakaoClient;
     private final GoogleOAuth2Client googleClient;
     private final MemberRedisRepositoryImpl redisRepository;
-    private final SecurityUtils securityUtils;
     private final MemberQueryPort memberQueryPort;
 
     public SocialLoginResponse kakaoLogin(String code) {
@@ -87,6 +86,9 @@ public class MemberAuthAdviser {
 
     public Boolean withdrawal(HttpServletRequest request, String refreshToken) {
 
+        // member 테이블의 유저 정보 deletedAt 추가
+        Boolean memberDeleted = memberCommandPort.memberWithdrawal(memberQueryPort.findByRefreshToken(refreshToken));
+
         // refresh token 삭제
         Boolean refreshTokenDeleted = memberCommandPort.deleteRefreshToken(refreshToken);
 
@@ -96,9 +98,6 @@ public class MemberAuthAdviser {
 
         // access token 블랙리스트 추가
         Boolean accessTokenBlocked = memberCommandPort.blockAccessToken(accessToken, claims);
-
-        // member 테이블의 유저 정보 deletedAt 추가
-        Boolean memberDeleted = memberCommandPort.memberWithdrawal(memberQueryPort.findByRefreshToken(refreshToken));
 
         // (optional) 현재 SecurityContextHolder 비우기
         SecurityContextHolder.clearContext();

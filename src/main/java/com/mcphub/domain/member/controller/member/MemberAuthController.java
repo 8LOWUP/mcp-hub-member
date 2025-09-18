@@ -1,6 +1,5 @@
 package com.mcphub.domain.member.controller.member;
 
-import com.mcphub.domain.member.dto.response.member.common.MemberIdResponse;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -11,6 +10,7 @@ import com.mcphub.global.common.base.BaseResponse;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -70,17 +70,39 @@ public class MemberAuthController {
     }
 
      @Operation(summary = "로그아웃 API", description = "해당 유저의 refreshToken을 삭제하는 API입니다.")
+     @ApiResponses({
+             @ApiResponse(
+                     responseCode = "200",
+                     description = "로그아웃 성공"
+             )
+     })
+     @Parameters({
+             @Parameter(name = "refreshToken", description = "로그인시 받는 refreshToken"),
+     })
      @DeleteMapping("/logout")
      public BaseResponse<Boolean> logout(
+             HttpServletRequest request,
+             @RequestParam String refreshToken
      ) {
-         return BaseResponse.onSuccess(memberAuthAdviser.logout());
+         return BaseResponse.onSuccess(memberAuthAdviser.logout(request, refreshToken));
      }
 
     @Operation(summary = "회원 탈퇴 API", description = "해당 유저 정보를 삭제하는 API입니다.")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "회원탈퇴 성공"
+            )
+    })
+    @Parameters({
+            @Parameter(name = "refreshToken", description = "로그인시 받는 refreshToken"),
+    })
     @DeleteMapping
     public BaseResponse<Boolean> withdrawal(
+            HttpServletRequest request,
+            @RequestParam String refreshToken
     ) {
-        return BaseResponse.onSuccess(memberAuthAdviser.withdrawal());
+        return BaseResponse.onSuccess(memberAuthAdviser.withdrawal(request, refreshToken));
     }
 }
 

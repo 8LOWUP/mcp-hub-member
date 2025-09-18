@@ -53,6 +53,22 @@ public class MemberAuthController {
         return BaseResponse.onSuccess(memberAuthAdviser.googleLogin(code));
     }
 
+    @Operation(summary = "깃허브 소셜 로그인 API", description = "깃허브 로그인을 수행하는 API입니다.")
+    @ApiResponses({
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "깃허브 소셜 로그인 성공"
+            )
+    })
+    @Parameters({
+            @Parameter(name = "code", description = "인증 코드를 받아옵니다."),
+    })
+    @GetMapping("/social/github")
+    public BaseResponse<SocialLoginResponse> githubLogin(
+            @RequestParam String code) {
+        return BaseResponse.onSuccess(memberAuthAdviser.githubLogin(code));
+    }
+
     @Operation(summary = "accessToken, refreshToken 재발급 API", description = "refreshToken가 유효하다면 새로운 accessToken을 발급하는 API입니다.")
     @ApiResponses({
             @ApiResponse(

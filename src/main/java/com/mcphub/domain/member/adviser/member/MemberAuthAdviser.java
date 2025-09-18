@@ -4,6 +4,11 @@ import com.mcphub.domain.member.client.GithubOAuth2Client;
 import com.mcphub.domain.member.client.GoogleOAuth2Client;
 import com.mcphub.domain.member.dto.response.readmodel.GithubProfile;
 import com.mcphub.domain.member.dto.response.readmodel.GoogleProfile;
+import com.mcphub.domain.member.service.auth.port.MemberQueryPort;
+import com.mcphub.global.util.SecurityUtils;
+import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import com.mcphub.domain.member.client.KakaoOAuth2Client;
@@ -18,6 +23,8 @@ import com.mcphub.global.config.security.jwt.TokenInfo;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.Objects;
+
 @Component
 @RequiredArgsConstructor
 public class MemberAuthAdviser {
@@ -29,6 +36,7 @@ public class MemberAuthAdviser {
     private final GoogleOAuth2Client googleClient;
     private final GithubOAuth2Client githubClient;
     private final MemberRedisRepositoryImpl redisRepository;
+    private final MemberQueryPort memberQueryPort;
 
     public SocialLoginResponse kakaoLogin(String code) {
         KakaoProfile profile = kakaoClient.getProfile(code);
@@ -73,6 +81,44 @@ public class MemberAuthAdviser {
     public SocialLoginResponse regenerateToken(String refreshToken) {
         TokenInfo tokenInfo = memberCommandPort.reissueAccessToken(refreshToken);
         return responseConverter.toRegenerateTokenResponse(tokenInfo);
+    }
+
+    public Boolean logout(HttpServletRequest request, String refreshToken) {
+        // refresh token 삭제
+        Boolean refreshTokenDeleted = memberCommandPort.deleteRefreshToken(refreshToken);
+
+        // access token 가져오기
+        String accessToken = jwtProvider.resolveToken(request);
+        Claims claims = jwtProvider.getClaims(accessToken);
+
+        // access token 블랙리스트 추가
+        Boolean accessTokenBlocked = memberCommandPort.blockAccessToken(accessToken, claims);
+
+        // (optional) 현재 SecurityContextHolder 비우기
+        SecurityContextHolder.clearContext();
+
+        return refreshTokenDeleted && accessTokenBlocked && Objects.isNull(SecurityContextHolder.getContext().getAuthentication());
+    }
+
+    public Boolean withdrawal(HttpServletRequest request, String refreshToken) {
+
+        // member 테이블의 유저 정보 deletedAt 추가
+        Boolean memberDeleted = memberCommandPort.memberWithdrawal(memberQueryPort.findByRefreshToken(refreshToken));
+
+        // refresh token 삭제
+        Boolean refreshTokenDeleted = memberCommandPort.deleteRefreshToken(refreshToken);
+
+        // access token 가져오기
+        String accessToken = jwtProvider.resolveToken(request);
+        Claims claims = jwtProvider.getClaims(accessToken);
+
+        // access token 블랙리스트 추가
+        Boolean accessTokenBlocked = memberCommandPort.blockAccessToken(accessToken, claims);
+
+        // (optional) 현재 SecurityContextHolder 비우기
+        SecurityContextHolder.clearContext();
+
+        return refreshTokenDeleted && accessTokenBlocked && memberDeleted && Objects.isNull(SecurityContextHolder.getContext().getAuthentication());
     }
 }
 

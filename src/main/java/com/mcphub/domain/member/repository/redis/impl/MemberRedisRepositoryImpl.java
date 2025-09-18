@@ -1,11 +1,13 @@
 package com.mcphub.domain.member.repository.redis.impl;
 
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 import com.mcphub.domain.member.repository.redis.MemberRedisRepository;
 
+import java.util.Date;
 import java.util.Optional;
 import java.util.concurrent.*;
 
@@ -30,7 +32,26 @@ public class MemberRedisRepositoryImpl implements MemberRedisRepository {
     }
 
     @Override
-    public void delete(String refreshToken) {
-        redisTemplate.delete("refresh:" + refreshToken);
+    public Boolean delete(String refreshToken) {
+        return redisTemplate.delete("refresh:" + refreshToken);
+    }
+
+    @Override
+    public Boolean blockAccessToken(String accessToken, Claims claims) {
+        // TTL = 토큰 만료 시각 - 현재 시각
+        Date expiration = claims.getExpiration();
+        long ttl = expiration.getTime() - System.currentTimeMillis();
+
+        if (ttl > 0) {
+            // key = 토큰 문자열 그대로, value = 상태값 (blacklisted 라는 값은 그냥 value 채우기 용)
+            redisTemplate.opsForValue().set("blacklist_access_token: " + accessToken, "blacklisted", ttl, TimeUnit.MILLISECONDS);
+        }
+
+        return true;
+    }
+
+    @Override
+    public Boolean isTokenBlocked(String accessToken) {
+        return redisTemplate.hasKey("blacklist_access_token: " + accessToken);
     }
 }

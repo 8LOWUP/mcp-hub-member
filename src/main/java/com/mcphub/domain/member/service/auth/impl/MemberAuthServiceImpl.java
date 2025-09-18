@@ -1,7 +1,10 @@
 package com.mcphub.domain.member.service.auth.impl;
 
+import java.util.Objects;
 import java.util.Optional;
 
+import com.mcphub.domain.member.status.MemberErrorStatus;
+import io.jsonwebtoken.Claims;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -11,7 +14,7 @@ import com.mcphub.domain.member.repository.Jpa.MemberRepository;
 import com.mcphub.domain.member.repository.redis.MemberRedisRepository;
 import com.mcphub.domain.member.service.auth.port.MemberCommandPort;
 import com.mcphub.domain.member.service.auth.port.MemberQueryPort;
-import com.mcphub.domain.member.status.AuthErrorStatus;
+import com.mcphub.global.common.exception.code.status.AuthErrorStatus;
 import com.mcphub.global.common.exception.RestApiException;
 import com.mcphub.global.config.security.jwt.JwtProvider;
 import com.mcphub.global.config.security.jwt.TokenInfo;
@@ -65,5 +68,43 @@ public class MemberAuthServiceImpl implements MemberCommandPort, MemberQueryPort
         return tokenInfo;
     }
 
+
+    // refresh token으로 member id 조회
+    @Override
+    @Transactional
+    public Long findByRefreshToken(String refreshToken) {
+        return redisRepository.findMemberIdByToken(refreshToken)
+                .orElseThrow(() -> new RestApiException(AuthErrorStatus.INVALID_REFRESH_TOKEN));
+    }
+
+    // refresh token 삭제
+    @Override
+    @Transactional
+    public Boolean deleteRefreshToken(String refreshToken) {
+
+        Long memberId = redisRepository.findMemberIdByToken(refreshToken)
+                .orElseThrow(() -> new RestApiException(AuthErrorStatus.INVALID_REFRESH_TOKEN));
+
+        return redisRepository.delete(refreshToken);
+    }
+
+    // 현재 처리중인 요청의 액세스 토큰을 블랙리스트에 추가
+    @Override
+    @Transactional
+    public Boolean blockAccessToken(String accessToken, Claims claims) {
+        return redisRepository.blockAccessToken(accessToken, claims);
+    }
+
+    // 해당 member 데이터를 soft delete
+    @Override
+    @Transactional
+    public Boolean memberWithdrawal(Long memberId) {
+
+        Member member = memberRepository.findById(memberId).orElseThrow(() -> new RestApiException(MemberErrorStatus.MEMBER_NOT_FOUND));
+
+        member.delete();
+
+        return !Objects.isNull(memberRepository.save(member).getDeletedAt());
+    }
 }
 

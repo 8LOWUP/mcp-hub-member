@@ -5,12 +5,12 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
 
-import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Builder
+@RedisHash(value = "refresh_token")
 public class RefreshToken { //redis에 저장할 객체
 
     @Id

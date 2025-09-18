@@ -1,5 +1,6 @@
 package com.mcphub.domain.member.controller.member;
 
+import com.mcphub.domain.member.dto.response.member.common.MemberIdResponse;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -68,23 +69,18 @@ public class MemberAuthController {
         return BaseResponse.onSuccess(memberAuthAdviser.regenerateToken(refreshToken));
     }
 
+     @Operation(summary = "로그아웃 API", description = "해당 유저의 refreshToken을 삭제하는 API입니다.")
+     @DeleteMapping("/logout")
+     public BaseResponse<Boolean> logout(
+     ) {
+         return BaseResponse.onSuccess(memberAuthAdviser.logout());
+     }
 
-    //
-    // @Operation(summary = "로그아웃 API", description = "해당 유저의 refreshToken을 삭제하는 API입니다.")
-    // @DeleteMapping("/logout")
-    // public BaseResponse<MemberIdResponse> logout(
-    //         @CurrentMember Member member
-    // ) {
-    //     return BaseResponse.onSuccess(memberAuthAdviser.logout(member));
-    // }
-    //
-    // @Operation(summary = "회원 탈퇴 API", description = "해당 유저 정보를 삭제하는 API입니다.")
-    // @DeleteMapping
-    // public BaseResponse<MemberIdResponse> withdrawal(
-    //         @CurrentMember Member member
-    // ) {
-    //     return BaseResponse.onSuccess(memberAuthAdviser.withdrawal(member));
-    // }
-
+    @Operation(summary = "회원 탈퇴 API", description = "해당 유저 정보를 삭제하는 API입니다.")
+    @DeleteMapping
+    public BaseResponse<Boolean> withdrawal(
+    ) {
+        return BaseResponse.onSuccess(memberAuthAdviser.withdrawal());
+    }
 }
 

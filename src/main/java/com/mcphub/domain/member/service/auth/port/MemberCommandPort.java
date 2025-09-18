@@ -7,4 +7,8 @@ public interface MemberCommandPort {
     MemberRM saveOrUpdate(String email, String nickname);
 
     TokenInfo reissueAccessToken(String refreshToken);
+
+    Boolean deleteAccessTokenAndRefreshToken(String refreshToken);
+
+    Boolean memberWithdrawal()
 }

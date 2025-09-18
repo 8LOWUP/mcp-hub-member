@@ -11,7 +11,7 @@ import com.mcphub.domain.member.repository.Jpa.MemberRepository;
 import com.mcphub.domain.member.repository.redis.MemberRedisRepository;
 import com.mcphub.domain.member.service.auth.port.MemberCommandPort;
 import com.mcphub.domain.member.service.auth.port.MemberQueryPort;
-import com.mcphub.domain.member.status.AuthErrorStatus;
+import com.mcphub.global.common.exception.code.status.AuthErrorStatus;
 import com.mcphub.global.common.exception.RestApiException;
 import com.mcphub.global.config.security.jwt.JwtProvider;
 import com.mcphub.global.config.security.jwt.TokenInfo;
@@ -65,5 +65,12 @@ public class MemberAuthServiceImpl implements MemberCommandPort, MemberQueryPort
         return tokenInfo;
     }
 
+    @Override
+    @Transactional
+    public Boolean deleteAccessTokenAndRefreshToken(String refreshToken) {
+        // TODO: 액세스 토큰 블랙리스트에 추가
+
+        // TODO: 리프레쉬 토큰 삭제
+    }
 }
 

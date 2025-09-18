@@ -1,4 +1,4 @@
-package com.mcphub.domain.member.status;
+package com.mcphub.global.common.exception.code.status;
 
 import com.mcphub.global.common.exception.code.BaseCodeDto;
 import com.mcphub.global.common.exception.code.BaseCodeInterface;

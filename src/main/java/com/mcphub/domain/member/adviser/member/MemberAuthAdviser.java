@@ -15,7 +15,7 @@ import com.mcphub.domain.member.converter.response.MemberResponseConverter;
 import com.mcphub.domain.member.dto.response.api.SocialLoginResponse;
 import com.mcphub.domain.member.dto.response.readmodel.KakaoProfile;
 import com.mcphub.domain.member.dto.response.readmodel.MemberRM;
-import com.mcphub.global.token.repository.redis.impl.MemberRedisRepositoryImpl;
+import com.mcphub.global.token.repository.redis.impl.RedisRepositoryImpl;
 import com.mcphub.domain.member.service.auth.port.MemberCommandPort;
 import com.mcphub.global.config.security.jwt.JwtProvider;
 import com.mcphub.global.config.security.jwt.TokenInfo;
@@ -34,7 +34,7 @@ public class MemberAuthAdviser {
     private final KakaoOAuth2Client kakaoClient;
     private final GoogleOAuth2Client googleClient;
     private final GithubOAuth2Client githubClient;
-    private final MemberRedisRepositoryImpl redisRepository;
+    private final RedisRepositoryImpl redisRepository;
     private final MemberQueryPort memberQueryPort;
 
     public SocialLoginResponse kakaoLogin(String code) {

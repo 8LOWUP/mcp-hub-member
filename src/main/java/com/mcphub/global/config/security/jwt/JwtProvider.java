@@ -13,7 +13,7 @@ import java.util.*;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
 
-import static com.mcphub.domain.member.status.AuthErrorStatus.INVALID_REFRESH_TOKEN;
+import static com.mcphub.global.common.exception.code.status.AuthErrorStatus.INVALID_REFRESH_TOKEN;
 
 @Component
 public class JwtProvider {
@@ -21,10 +21,10 @@ public class JwtProvider {
     @Value("${jwt.secret}")
     private String jwtSecretKey;
 
-    @Value("${jwt.refreshExpiration}")
+    @Value("${jwt.accessExpiration}")
     private long jwtAccessExpiration;
 
-    @Value("${jwt.accessExpiration}")
+    @Value("${jwt.refreshExpiration}")
     private long jwtRefreshExpiration;
 
 
@@ -75,6 +75,8 @@ public class JwtProvider {
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+            // TODO: 블랙리스트 여부 검사 추가
+
             return true;
         } catch (JwtException | IllegalArgumentException e) {
             return false; // 유효하지 않은 토큰 처리

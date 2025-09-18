@@ -22,7 +22,7 @@ import com.mcphub.global.config.security.jwt.JwtProvider;
 
 import java.time.LocalDateTime;
 
-import static com.mcphub.domain.member.status.AuthErrorStatus.INVALID_ACCESS_TOKEN;
+import static com.mcphub.global.common.exception.code.status.AuthErrorStatus.INVALID_ACCESS_TOKEN;
 
 @Configuration
 @EnableWebSecurity

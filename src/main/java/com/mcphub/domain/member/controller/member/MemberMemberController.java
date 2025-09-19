@@ -47,7 +47,7 @@
              )
      })
      @GetMapping("/me")
-     public BaseResponse<?> getUMemberProfile() {
+     public BaseResponse<?> getMemberProfile() {
          return null;
      }
 

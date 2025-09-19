@@ -37,7 +37,7 @@ jobs:
       # github.event.repository.name을 통해 각 레포지토리 이름을 이미지 이름으로 사용
       - name: Build & Push Docker Image
         run: |
-          IMAGE=${{ secrets.KCR_HOST }}/project/${{ github.event.repository.name }}
+          IMAGE=${{ secrets.KCR_HOST }}/mcp-hub-backend-dev/${{ github.event.repository.name }}
           TAG=${{ github.sha }}
 
           docker build -t $IMAGE:$TAG .

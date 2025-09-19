@@ -1,5 +1,6 @@
 package com.mcphub.domain.member.repository.querydsl.impl;
 
+import com.mcphub.domain.member.dto.request.MemberModifyRequest;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,5 +35,15 @@ public class MemberDslRepositoryImpl implements MemberDslRepository {
                         .where(qMember.id.eq(memberId))
                         .fetchFirst()
         );
+    }
+
+    @Override
+    public Boolean modifyMember(MemberModifyRequest request) {
+        return jpaQueryFactory.update(qMember)
+                .set(qMember.email, request.getEmail())
+                .set(qMember.nickname, request.getNickname())
+                .where(qMember.id.eq(request.getId()))
+                .execute()
+                > 0;
     }
 }

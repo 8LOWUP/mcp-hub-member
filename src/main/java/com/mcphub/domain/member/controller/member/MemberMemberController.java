@@ -1,5 +1,6 @@
  package com.mcphub.domain.member.controller.member;
 
+ import com.mcphub.domain.member.adviser.member.MemberAdviser;
  import com.mcphub.domain.member.adviser.member.MemberAuthAdviser;
  import com.mcphub.domain.member.dto.request.MemberModifyRequest;
  import io.swagger.v3.oas.annotations.Operation;
@@ -20,6 +21,7 @@
  public class MemberMemberController {
 
      private final MemberAuthAdviser memberAuthAdviser;
+     private final MemberAdviser memberAdviser;
 
      @Operation(summary = "회원 탈퇴 API", description = "해당 유저 정보를 삭제하는 API입니다.")
      @ApiResponses({
@@ -48,7 +50,7 @@
      })
      @GetMapping("/me")
      public BaseResponse<?> getMemberProfile() {
-         return null;
+         return BaseResponse.onSuccess(memberAdviser.getMemberById());
      }
 
      @Operation(summary = "프로필 수정 API", description = "요청을 보낸 유저의 프로필을 수정하는 API입니다.")
@@ -65,7 +67,7 @@
      })
      @PatchMapping("/me")
      public BaseResponse<?> modifyMemberProfile(@RequestBody MemberModifyRequest request) {
-         return null;
+         return BaseResponse.onSuccess(memberAdviser.modifyMemberProfile(request));
      }
 
      @Operation(summary = "다른 회원 프로필 조회 API", description = "다른 유저의 프로필을 조회하는 API입니다.")
@@ -80,7 +82,7 @@
      })
      @GetMapping("/{memberId}")
      public BaseResponse<?> getOtherMemberProfile(@PathVariable Long memberId) {
-         return null;
+         return BaseResponse.onSuccess(memberAdviser.getOtherMemberById(memberId));
      }
 
      @Operation(summary = "검색창 조회 API", description = "요청을 보낸 유저가 입력한 단어와 유사한 유저들을 조회하는 API 입니다.")
@@ -94,8 +96,7 @@
              @Parameter(name = "keyword", description = "유저가 입력한 키워드"),
      })
      @GetMapping("/search")
-     public BaseResponse<?> getMembersByKeyword(@RequestParam String keyword
-     ) {
-         return null;
+     public BaseResponse<?> getMembersByKeyword(@RequestParam String keyword) {
+         return BaseResponse.onSuccess(memberAdviser.getMembersByKeyword(keyword));
      }
  }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import com.mcphub.domain.member.entity.Member;
 import com.mcphub.domain.member.entity.QMember;
 import com.mcphub.domain.member.repository.querydsl.MemberDslRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
@@ -20,6 +21,7 @@ public class MemberDslRepositoryImpl implements MemberDslRepository {
     private final QMember qMember = QMember.member;
 
     @Override
+    @Transactional(readOnly = true)
     public boolean existById(Long memberId) {
         return jpaQueryFactory
                 .selectFrom(qMember)
@@ -28,6 +30,7 @@ public class MemberDslRepositoryImpl implements MemberDslRepository {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Member> findByIdNotFetchLoginInfo(Long memberId) {
         return Optional.ofNullable(
                 jpaQueryFactory
@@ -38,6 +41,7 @@ public class MemberDslRepositoryImpl implements MemberDslRepository {
     }
 
     @Override
+    @Transactional
     public Boolean modifyMember(MemberModifyRequest request) {
         return jpaQueryFactory.update(qMember)
                 .set(qMember.email, request.getEmail())

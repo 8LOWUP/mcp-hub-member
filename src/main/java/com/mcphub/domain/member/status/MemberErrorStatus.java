@@ -13,7 +13,8 @@ public enum MemberErrorStatus implements BaseCodeInterface {
     UNSUPPORTED_LOGIN_TYPE(HttpStatus.BAD_REQUEST, "MEMBER400", "지원하지 않는 로그인 타입입니다."),
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "MEMBER404", "회원을 찾을 수 없습니다."),
     AUTHENTICATION_FAILED(HttpStatus.UNAUTHORIZED, "MEMBER401", "로그인 정보를 찾을 수 없습니다."),
-
+    MEMBER_ACCESS_DENIED(HttpStatus.BAD_REQUEST, "MEMBER400", "접근하려는 유저 정보와 접속 정보가 일치하지 않습니다."),
+    MEMBER_UPDATE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "MEMBER500", "멤버 정보를 업데이트 하는 도중 문제가 발생했습니다."),
     DB_SAVE_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "REGISTER001", "DB 저장중 문제 발생. RollBack 됩니다."),
 
 

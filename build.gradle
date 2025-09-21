@@ -92,6 +92,9 @@ dependencies {
 	implementation 'com.anthropic:anthropic-java:2.6.0'
 
 	implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
+
+    //Elasticsearch
+    implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
 }
 
 tasks.named('test') {

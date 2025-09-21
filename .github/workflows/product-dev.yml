@@ -45,7 +45,7 @@ jobs:
 
   # 게이트웨이 레포 Reusable Workflow 호출
   trigger-gateway-deploy:
-    uses: 8LOWUP/spring-api-gateway-devonly/.github/workflows/deploy.yml@main
+    uses: 8LOWUP/spring-api-gateway-devonly/.github/workflows/mcp-market-reusable-dev.yml@main
     with:
       service: ${{ github.event.repository.name }}
       tag: ${{ github.sha }}

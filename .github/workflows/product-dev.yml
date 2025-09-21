@@ -14,7 +14,6 @@ jobs:
       - name: Checkout Code (with submodules)
         uses: actions/checkout@v3
         with:
-          token: ${{ secrets.GH_PAT }}
           submodules: recursive
       # 서브모듈도 함께 체크아웃
 

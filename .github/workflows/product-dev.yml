@@ -31,9 +31,9 @@ jobs:
           chmod +x ./gradlew 
           ./gradlew clean build -x test
 
-      # Kakao Container Registry 로그인
-      - name: Login to KCR
-        run: echo "${{ secrets.KCR_PASSWORD }}" | docker login ${{ secrets.KCR_HOST }} -u ${{ secrets.KCR_USER }} --password-stdin
+#      # Kakao Container Registry 로그인
+#      - name: Login to KCR
+#        run: echo "${{ secrets.KCR_PASSWORD }}" | docker login ${{ secrets.KCR_HOST }} -u ${{ secrets.KCR_USER }} --password-stdin
 
       # Docker 이미지 빌드 & KCR 푸시
       # github.event.repository.name을 통해 각 레포지토리 이름을 이미지 이름으로 사용

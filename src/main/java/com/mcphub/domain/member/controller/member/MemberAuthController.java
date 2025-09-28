@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Member Auth API", description = "Member Auth 관련 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/members/auth")
 public class MemberAuthController {
 
     private final MemberAuthAdviser memberAuthAdviser;

@@ -140,6 +140,10 @@ dependencies {
 	//server grpc
 	implementation "net.devh:grpc-server-spring-boot-starter:2.15.0.RELEASE"
 
+	// prometheus
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation 'io.micrometer:micrometer-registry-prometheus'
+
 }
 
 tasks.named('test') {

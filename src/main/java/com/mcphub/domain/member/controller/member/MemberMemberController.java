@@ -23,6 +23,7 @@
      private final MemberAuthAdviser memberAuthAdviser;
      private final MemberAdviser memberAdviser;
 
+
      @Operation(summary = "회원 탈퇴 API", description = "해당 유저 정보를 삭제하는 API입니다.")
      @ApiResponses({
              @ApiResponse(

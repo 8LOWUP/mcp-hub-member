@@ -6,13 +6,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
-@Profile("dev") // dev 환경에서만 활성화
+@Profile("dev")
 public class SentryDevConfig {
 
     @Bean
-    public SentryOptions.OptionsConfiguration<SentryOptions> sentryOptions() {
-        return options -> {
-            options.setEnvironment("member-service"); // 여기서 override
+    public io.sentry.SentryOptions.BeforeSendCallback beforeSendCallback() {
+        return (event, hint) -> {
+            event.setEnvironment("member-service");
+            return event;
         };
     }
 }

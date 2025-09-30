@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/members/auth")
 public class MemberAuthController {
-
     private final MemberAuthAdviser memberAuthAdviser;
 
     @Operation(summary = "카카오 소셜 로그인 API", description = "카카오 로그인을 수행하는 API입니다.")

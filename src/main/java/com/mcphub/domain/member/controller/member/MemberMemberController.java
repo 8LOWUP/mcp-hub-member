@@ -71,7 +71,7 @@
          return BaseResponse.onSuccess(memberAdviser.modifyMemberProfile(request));
      }
 
-     @Operation(summary = "다른 회원 프로필 조회 API", description = "다른 유저의 프로필을 조회하는 API입니다.")
+     @Operation(summary = "다른 회원 프로필 조회 API", description = "다른 유저의 프로필을 조회하는 API입니다.", security = {})
      @ApiResponses({
              @ApiResponse(
                      responseCode = "200",

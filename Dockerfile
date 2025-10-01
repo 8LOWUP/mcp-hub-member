@@ -1,4 +1,4 @@
-FROM openjdk:21-jdk-slim
+FROM openjdk:17-jdk-slim
 
 # JAR 파일 복사 및 실행
 ARG JAR_FILE=build/libs/*.jar

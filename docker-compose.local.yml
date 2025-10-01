@@ -1,3 +1,5 @@
+# 로컬용 명령어 입니다.
+# docker compose --env-file config/env/local.env -f docker-compose.local.yml up -d
 services:
   mysql:
     container_name: mysql-mcp-market-local
@@ -30,6 +32,45 @@ services:
     networks:
       mm_local_network:
         ipv4_address: ${NETWORK_REDIS_IP}
+    restart: always
+
+  mongodb:
+    container_name: mongodb-mcp-market-local
+    image: mongo:latest
+    ports:
+      - target: ${MONGODB_INNER_PORT}
+        published: ${MONGODB_OUTER_PORT}
+        protocol: tcp
+        host_ip: 0.0.0.0
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGODB_USER}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGODB_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGODB_DATABASE}
+    networks:
+      mm_local_network:
+        ipv4_address: ${NETWORK_MONGODB_IP}
+    restart: always
+
+  elasticsearch:
+    container_name: elasticsearch-mcp-market-local
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.14.0
+    environment:
+      - discovery.type=single-node
+      - bootstrap.memory_lock=true
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - target: ${ES_INNER_PORT}
+        published: ${ES_OUTER_PORT}
+        protocol: tcp
+        host_ip: 0.0.0.0
+    networks:
+      mm_local_network:
+        ipv4_address: ${NETWORK_ES_IP}
     restart: always
 
 networks:

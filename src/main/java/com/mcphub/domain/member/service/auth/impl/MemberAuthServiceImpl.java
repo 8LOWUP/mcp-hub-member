@@ -45,6 +45,7 @@ public class MemberAuthServiceImpl implements MemberCommandPort, MemberQueryPort
             member = Member.builder().email(email).nickname(nickname).build();
         }
 
+        memberRepository.save(member);
         return new MemberRM(member.getId(), member.getEmail(), member.getNickname());
     }
 

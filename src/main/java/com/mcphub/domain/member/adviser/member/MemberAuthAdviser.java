@@ -4,7 +4,6 @@ import com.mcphub.domain.member.client.GithubOAuth2Client;
 import com.mcphub.domain.member.client.GoogleOAuth2Client;
 import com.mcphub.domain.member.dto.response.readmodel.GithubProfile;
 import com.mcphub.domain.member.dto.response.readmodel.GoogleProfile;
-import com.mcphub.domain.member.repository.elasticsearch.MemberElasticSearchRepository;
 import com.mcphub.domain.member.service.auth.port.MemberQueryPort;
 import com.mcphub.domain.member.service.member.MemberService;
 import com.mcphub.global.token.repository.redis.RedisRepository;
@@ -37,7 +36,6 @@ public class MemberAuthAdviser {
     private final GoogleOAuth2Client googleClient;
     private final GithubOAuth2Client githubClient;
     private final RedisRepository redisRepository;
-    private final MemberElasticSearchRepository memberElasticSearchRepository;
     private final MemberQueryPort memberQueryPort;
     private final MemberService memberService;
 

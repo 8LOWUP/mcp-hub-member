@@ -33,17 +33,12 @@ public class MemberAuthServiceImpl implements MemberCommandPort, MemberQueryPort
     @Transactional
     public MemberRM saveOrUpdate(String email, String nickname) {
 
-        Member member = memberRepository.findByEmailAndNickname(email, nickname)
+        Member member = memberRepository.findFirstByEmailAndDeletedAtIsNullOrderByCreatedAtDesc(email)
                 .orElseGet(() -> Member.builder() // 데이터가 없다면 새로 삽입
                                 .email(email)
                                 .nickname(nickname)
                                 .build()
                 );
-
-        // 이미 존재하는 데이터이지만, 회원탈퇴한 상태일 때는 데이터 새로 삽입
-        if(member.isDeleted()) {
-            member = Member.builder().email(email).nickname(nickname).build();
-        }
 
         memberRepository.save(member);
         return new MemberRM(member.getId(), member.getEmail(), member.getNickname());

@@ -33,7 +33,7 @@ public class MemberAuthServiceImpl implements MemberCommandPort, MemberQueryPort
     @Transactional
     public MemberRM saveOrUpdate(String email, String nickname) {
 
-        Member member = memberRepository.findFirstByEmailAndDeletedAtIsNullOrderByCreatedAtDesc(email)
+        Member member = memberRepository.findFirstByEmailAndDeletedAtIsNullOrderByUpdatedAtDescCreatedAtDesc(email)
                 .orElseGet(() -> Member.builder() // 데이터가 없다면 새로 삽입
                                 .email(email)
                                 .nickname(nickname)

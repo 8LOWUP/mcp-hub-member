@@ -5,6 +5,8 @@ import com.mcphub.domain.member.client.GoogleOAuth2Client;
 import com.mcphub.domain.member.dto.response.readmodel.GithubProfile;
 import com.mcphub.domain.member.dto.response.readmodel.GoogleProfile;
 import com.mcphub.domain.member.service.auth.port.MemberQueryPort;
+import com.mcphub.domain.member.service.member.MemberService;
+import com.mcphub.global.token.repository.redis.RedisRepository;
 import io.jsonwebtoken.Claims;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,7 +17,6 @@ import com.mcphub.domain.member.converter.response.MemberResponseConverter;
 import com.mcphub.domain.member.dto.response.api.SocialLoginResponse;
 import com.mcphub.domain.member.dto.response.readmodel.KakaoProfile;
 import com.mcphub.domain.member.dto.response.readmodel.MemberRM;
-import com.mcphub.global.token.repository.redis.impl.RedisRepositoryImpl;
 import com.mcphub.domain.member.service.auth.port.MemberCommandPort;
 import com.mcphub.global.config.security.jwt.JwtProvider;
 import com.mcphub.global.config.security.jwt.TokenInfo;
@@ -34,8 +35,9 @@ public class MemberAuthAdviser {
     private final KakaoOAuth2Client kakaoClient;
     private final GoogleOAuth2Client googleClient;
     private final GithubOAuth2Client githubClient;
-    private final RedisRepositoryImpl redisRepository;
+    private final RedisRepository redisRepository;
     private final MemberQueryPort memberQueryPort;
+    private final MemberService memberService;
 
     public SocialLoginResponse kakaoLogin(String code) {
         KakaoProfile profile = kakaoClient.getProfile(code);
@@ -47,6 +49,8 @@ public class MemberAuthAdviser {
         TokenInfo token = jwtProvider.generateToken(member.id().toString());
 
         redisRepository.save(member.id(), token.refreshToken());
+
+        memberService.saveMemberToElasticSearch(member);
 
         return responseConverter.toSocialLoginResponse(token, member);
     }
@@ -61,6 +65,8 @@ public class MemberAuthAdviser {
 
         redisRepository.save(member.id(), token.refreshToken());
 
+        memberService.saveMemberToElasticSearch(member);
+
         return responseConverter.toSocialLoginResponse(token, member);
     }
 
@@ -73,6 +79,8 @@ public class MemberAuthAdviser {
         TokenInfo token = jwtProvider.generateToken(member.id().toString());
 
         redisRepository.save(member.id(), token.refreshToken());
+
+        memberService.saveMemberToElasticSearch(member);
 
         return responseConverter.toSocialLoginResponse(token, member);
     }

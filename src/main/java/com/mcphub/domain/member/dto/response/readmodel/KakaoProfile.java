@@ -19,6 +19,7 @@ public class KakaoProfile {
         @Setter
         public static class Profile {
             private String nickname;
+            private String thumbnail_image_url;
         }
     }
 }

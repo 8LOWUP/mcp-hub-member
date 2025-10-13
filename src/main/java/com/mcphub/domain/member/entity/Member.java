@@ -19,4 +19,6 @@ public class Member extends BaseEntity {
     private String email;
 
     private String nickname;
+
+    private String picture;
 }

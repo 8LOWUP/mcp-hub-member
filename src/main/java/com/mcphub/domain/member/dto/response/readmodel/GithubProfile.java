@@ -9,4 +9,5 @@ public class GithubProfile {
 
     private String id;
     private String login;
+    private String avatar_url;
 }

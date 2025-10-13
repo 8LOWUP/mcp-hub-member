@@ -43,7 +43,8 @@ public class MemberAuthAdviser {
         KakaoProfile profile = kakaoClient.getProfile(code);
         MemberRM member = memberCommandPort.saveOrUpdate(
                 profile.getKakao_account().getEmail(),
-                profile.getKakao_account().getProfile().getNickname()
+                profile.getKakao_account().getProfile().getNickname(),
+                profile.getKakao_account().getProfile().getThumbnail_image_url()
         );
 
         TokenInfo token = jwtProvider.generateToken(member.id().toString());
@@ -58,7 +59,7 @@ public class MemberAuthAdviser {
     public SocialLoginResponse googleLogin(String code) {
         GoogleProfile profile = googleClient.getProfile(code);
         MemberRM member = memberCommandPort.saveOrUpdate(
-                profile.getEmail(), profile.getName()
+                profile.getEmail(), profile.getName(), profile.getPicture()
         );
 
         TokenInfo token = jwtProvider.generateToken(member.id().toString());
@@ -73,7 +74,7 @@ public class MemberAuthAdviser {
     public SocialLoginResponse githubLogin(String code) {
         GithubProfile profile = githubClient.getProfile(code);
         MemberRM member = memberCommandPort.saveOrUpdate(
-                profile.getLogin(), profile.getId()
+                profile.getLogin(), profile.getId(), profile.getAvatar_url()
         );
 
         TokenInfo token = jwtProvider.generateToken(member.id().toString());

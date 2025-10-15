@@ -8,6 +8,7 @@
  import io.swagger.v3.oas.annotations.Parameters;
  import io.swagger.v3.oas.annotations.responses.ApiResponse;
  import io.swagger.v3.oas.annotations.responses.ApiResponses;
+ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
  import io.swagger.v3.oas.annotations.tags.Tag;
  import jakarta.servlet.http.HttpServletRequest;
  import lombok.RequiredArgsConstructor;
@@ -71,7 +72,7 @@
          return BaseResponse.onSuccess(memberAdviser.modifyMemberProfile(request));
      }
 
-     @Operation(summary = "다른 회원 프로필 조회 API", description = "다른 유저의 프로필을 조회하는 API입니다.", security = {})
+     @Operation(summary = "다른 회원 프로필 조회 API", description = "다른 유저의 프로필을 조회하는 API입니다.", security = @SecurityRequirement(name = ""))
      @ApiResponses({
              @ApiResponse(
                      responseCode = "200",

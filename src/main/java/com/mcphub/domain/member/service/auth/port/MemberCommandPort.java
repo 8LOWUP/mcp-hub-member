@@ -5,7 +5,7 @@ import com.mcphub.global.config.security.jwt.TokenInfo;
 import io.jsonwebtoken.Claims;
 
 public interface MemberCommandPort {
-    MemberRM saveOrUpdate(String email, String nickname);
+    MemberRM saveOrUpdate(String email, String nickname, String picture);
 
     TokenInfo reissueAccessToken(String refreshToken);
 

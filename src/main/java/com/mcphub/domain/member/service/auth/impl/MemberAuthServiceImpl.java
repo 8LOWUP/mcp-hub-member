@@ -31,21 +31,24 @@ public class MemberAuthServiceImpl implements MemberCommandPort, MemberQueryPort
 
     @Override
     @Transactional
-    public MemberRM saveOrUpdate(String email, String nickname) {
-        Member member = memberRepository.findByEmail(email)
-                .orElseGet(() -> memberRepository.save(
-                        Member.builder()
+    public MemberRM saveOrUpdate(String email, String nickname, String picture) {
+
+        Member member = memberRepository.findFirstByEmailAndDeletedAtIsNullOrderByUpdatedAtDescCreatedAtDesc(email)
+                .orElseGet(() -> Member.builder() // 데이터가 없다면 새로 삽입
                                 .email(email)
                                 .nickname(nickname)
+                                .picture(picture)
                                 .build()
-                ));
-        return new MemberRM(member.getId(), member.getEmail(), member.getNickname());
+                );
+
+        memberRepository.save(member);
+        return new MemberRM(member.getId(), member.getEmail(), member.getNickname(), member.getPicture());
     }
 
     @Override
     public Optional<MemberRM> findByEmail(String email) {
         return memberRepository.findByEmail(email)
-                .map(m -> new MemberRM(m.getId(), m.getEmail(), m.getNickname()));
+                .map(m -> new MemberRM(m.getId(), m.getEmail(), m.getNickname(), m.getPicture()));
     }
 
     // 토큰 재발급

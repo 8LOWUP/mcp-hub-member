@@ -1,6 +1,7 @@
 package com.mcphub.domain.member.service.member;
 
 import com.mcphub.domain.member.dto.request.MemberModifyRequest;
+import com.mcphub.domain.member.dto.response.readmodel.MemberRM;
 import com.mcphub.domain.member.entity.Member;
 import com.mcphub.domain.member.entity.MemberElasticDocument;
 
@@ -16,4 +17,6 @@ public interface MemberService {
     List<MemberElasticDocument> findByEmailContainingOrNicknameContaining(String keyword);
 
     Boolean modifyMemberProfile(Long id, MemberModifyRequest request);
+
+    MemberElasticDocument saveMemberToElasticSearch(MemberRM member);
 }

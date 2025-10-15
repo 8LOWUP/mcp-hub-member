@@ -1,6 +1,7 @@
 package com.mcphub.domain.member.service.member;
 
 import com.mcphub.domain.member.dto.request.MemberModifyRequest;
+import com.mcphub.domain.member.dto.response.readmodel.MemberRM;
 import com.mcphub.domain.member.entity.Member;
 import com.mcphub.domain.member.entity.MemberElasticDocument;
 import com.mcphub.domain.member.repository.elasticsearch.MemberElasticSearchRepository;
@@ -50,5 +51,14 @@ public class MemberServiceImpl implements MemberService {
         return true;
     }
 
+    @Override
+    public MemberElasticDocument saveMemberToElasticSearch(MemberRM member) {
+        if (memberElasticSearchRepository.existsById(member.id().toString())) {
+            return null;
+        }
 
+        return memberElasticSearchRepository.save(
+                new MemberElasticDocument(member.id().toString(), member.email(), member.nickname())
+        );
+    }
 }

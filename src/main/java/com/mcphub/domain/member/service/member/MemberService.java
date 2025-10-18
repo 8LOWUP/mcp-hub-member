@@ -14,9 +14,9 @@ public interface MemberService {
 
     Member findByIdNotFetchLoginInfo(Long memberId);
 
-    List<MemberElasticDocument> findByEmailContainingOrNicknameContaining(String keyword);
+//    List<MemberElasticDocument> findByEmailContainingOrNicknameContaining(String keyword);
 
     Boolean modifyMemberProfile(Long id, MemberModifyRequest request);
 
-    MemberElasticDocument saveMemberToElasticSearch(MemberRM member);
+//    MemberElasticDocument saveMemberToElasticSearch(MemberRM member);
 }

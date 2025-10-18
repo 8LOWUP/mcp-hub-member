@@ -18,12 +18,12 @@ public class MemberAdviser {
     private final MemberService memberService;
     private final SecurityUtils securityUtils;
 
-    public List<MemberDetailResponse> getMembersByKeyword(String keyword) {
-
-        // 키워드 하나만으로 닉네임 또는 이메일의 유저 검색
-        return memberService.findByEmailContainingOrNicknameContaining(keyword)
-                .stream().map(memberResponseConverter::toMemberElasticSearchResponse).toList();
-    }
+//    public List<MemberDetailResponse> getMembersByKeyword(String keyword) {
+//
+//        // 키워드 하나만으로 닉네임 또는 이메일의 유저 검색
+//        return memberService.findByEmailContainingOrNicknameContaining(keyword)
+//                .stream().map(memberResponseConverter::toMemberElasticSearchResponse).toList();
+//    }
 
     public MemberDetailResponse getMemberById() {
         Long id = securityUtils.getUserId();

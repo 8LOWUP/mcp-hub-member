@@ -87,18 +87,18 @@
          return BaseResponse.onSuccess(memberAdviser.getOtherMemberById(memberId));
      }
 
-     @Operation(summary = "검색창 조회 API", description = "요청을 보낸 유저가 입력한 단어와 유사한 유저들을 조회하는 API 입니다.")
-     @ApiResponses({
-             @ApiResponse(
-                     responseCode = "200",
-                     description = "검색창 조회 성공"
-             )
-     })
-     @Parameters({
-             @Parameter(name = "keyword", description = "유저가 입력한 키워드"),
-     })
-     @GetMapping("/search")
-     public BaseResponse<?> getMembersByKeyword(@RequestParam String keyword) {
-         return BaseResponse.onSuccess(memberAdviser.getMembersByKeyword(keyword));
-     }
+//     @Operation(summary = "검색창 조회 API", description = "요청을 보낸 유저가 입력한 단어와 유사한 유저들을 조회하는 API 입니다.")
+//     @ApiResponses({
+//             @ApiResponse(
+//                     responseCode = "200",
+//                     description = "검색창 조회 성공"
+//             )
+//     })
+//     @Parameters({
+//             @Parameter(name = "keyword", description = "유저가 입력한 키워드"),
+//     })
+//     @GetMapping("/search")
+//     public BaseResponse<?> getMembersByKeyword(@RequestParam String keyword) {
+//         return BaseResponse.onSuccess(memberAdviser.getMembersByKeyword(keyword));
+//     }
  }

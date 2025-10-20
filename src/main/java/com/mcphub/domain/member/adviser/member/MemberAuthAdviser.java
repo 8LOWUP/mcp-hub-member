@@ -51,7 +51,7 @@ public class MemberAuthAdviser {
 
         redisRepository.save(member.id(), token.refreshToken());
 
-        memberService.saveMemberToElasticSearch(member);
+//        memberService.saveMemberToElasticSearch(member);
 
         return responseConverter.toSocialLoginResponse(token, member);
     }
@@ -66,7 +66,7 @@ public class MemberAuthAdviser {
 
         redisRepository.save(member.id(), token.refreshToken());
 
-        memberService.saveMemberToElasticSearch(member);
+//        memberService.saveMemberToElasticSearch(member);
 
         return responseConverter.toSocialLoginResponse(token, member);
     }
@@ -81,7 +81,7 @@ public class MemberAuthAdviser {
 
         redisRepository.save(member.id(), token.refreshToken());
 
-        memberService.saveMemberToElasticSearch(member);
+//        memberService.saveMemberToElasticSearch(member);
 
         return responseConverter.toSocialLoginResponse(token, member);
     }

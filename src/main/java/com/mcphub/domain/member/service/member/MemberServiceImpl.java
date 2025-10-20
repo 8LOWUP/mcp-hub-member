@@ -4,7 +4,7 @@ import com.mcphub.domain.member.dto.request.MemberModifyRequest;
 import com.mcphub.domain.member.dto.response.readmodel.MemberRM;
 import com.mcphub.domain.member.entity.Member;
 import com.mcphub.domain.member.entity.MemberElasticDocument;
-import com.mcphub.domain.member.repository.elasticsearch.MemberElasticSearchRepository;
+//import com.mcphub.domain.member.repository.elasticsearch.MemberElasticSearchRepository;
 import com.mcphub.domain.member.repository.querydsl.MemberDslRepository;
 import com.mcphub.global.common.exception.RestApiException;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +20,7 @@ import static com.mcphub.domain.member.status.MemberErrorStatus.*;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
     private final MemberDslRepository memberDslRepository;
-    private final MemberElasticSearchRepository memberElasticSearchRepository;
+//    private final MemberElasticSearchRepository memberElasticSearchRepository;
 
     @Override
     public void existById(Long memberId) {
@@ -38,10 +38,10 @@ public class MemberServiceImpl implements MemberService {
                 .orElseThrow(() -> new RestApiException(MEMBER_NOT_FOUND));
     }
 
-    @Override
-    public List<MemberElasticDocument> findByEmailContainingOrNicknameContaining(String keyword) {
-        return memberElasticSearchRepository.findByEmailContainingOrNicknameContaining(keyword, keyword);
-    }
+//    @Override
+//    public List<MemberElasticDocument> findByEmailContainingOrNicknameContaining(String keyword) {
+//        return memberElasticSearchRepository.findByEmailContainingOrNicknameContaining(keyword, keyword);
+//    }
 
     @Override
     public Boolean modifyMemberProfile(Long id, MemberModifyRequest request) {
@@ -51,14 +51,14 @@ public class MemberServiceImpl implements MemberService {
         return true;
     }
 
-    @Override
-    public MemberElasticDocument saveMemberToElasticSearch(MemberRM member) {
-        if (memberElasticSearchRepository.existsById(member.id().toString())) {
-            return null;
-        }
-
-        return memberElasticSearchRepository.save(
-                new MemberElasticDocument(member.id().toString(), member.email(), member.nickname())
-        );
-    }
+//    @Override
+//    public MemberElasticDocument saveMemberToElasticSearch(MemberRM member) {
+//        if (memberElasticSearchRepository.existsById(member.id().toString())) {
+//            return null;
+//        }
+//
+//        return memberElasticSearchRepository.save(
+//                new MemberElasticDocument(member.id().toString(), member.email(), member.nickname())
+//        );
+//    }
 }
